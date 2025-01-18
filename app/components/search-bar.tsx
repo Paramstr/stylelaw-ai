@@ -55,7 +55,7 @@ export function SearchBar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent 
-                className="w-[200px] bg-white border border-black rounded-none shadow-none p-0 mt-0.5"
+                className="w-[200px] bg-white border border-black rounded-none shadow-none p-0 mt-0.5 ml-4"
                 align="start"
               >
                 {selectedMode !== "enabled" && (

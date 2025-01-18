@@ -9,15 +9,9 @@ export default function ResearchPage() {
       <NavHeader title="DONNA | RESEARCH" />
       
       <main className="pt-32 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex gap-8">
-            <div className="w-[250px] shrink-0 border border-black">
-              <FilterSection />
-            </div>
-            <div className="flex-1">
-              <SearchBar />
-            </div>
-          </div>
+        <div className="max-w-7xl w-full mx-auto space-y-6 flex flex-col items-center">
+          <FilterSection />
+          <SearchBar />
         </div>
       </main>
 

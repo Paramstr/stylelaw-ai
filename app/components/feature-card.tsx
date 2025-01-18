@@ -34,11 +34,9 @@ export function FeatureCard({
       {onClick && (
         <div className={`absolute top-2 ${tryButtonPosition === 'left' ? 'left-2' : 'right-2'}`}>
           <span className={`px-3 py-1 text-sm font-semibold border ${dark ? 'border-white' : 'border-black'} rounded-sm transition-colors ${
-  onClick 
-    ? dark
+    dark
       ? 'group-hover:bg-white group-hover:text-black'
       : 'group-hover:bg-black group-hover:text-white'
-    : ''
 }`}>
             {tryButtonText}
           </span>
