@@ -3,6 +3,9 @@ const path = require('path')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  images: {
+    domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com'],
+  },
   webpack(config, { isServer }) {
     if (!isServer) {
       // Ensure that all imports of 'yjs' resolve to the same instance
@@ -25,10 +28,15 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/bCccDwkKkN',
-        destination: '/', // Matched parameters can be used in the destination
+        source: '/old-research',
+        destination: '/research',
         permanent: true,
       },
+      {
+        source: '/beta',
+        destination: '/editor/default',
+        permanent: true,
+      }
     ]
   },
 }

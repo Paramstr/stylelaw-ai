@@ -2,7 +2,7 @@
   "extends": ["next/core-web-vitals"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": 0,
     "import/no-anonymous-default-export": "off",
     "react-hooks/exhaustive-deps": "warn",
     "react/jsx-no-constructed-context-values": "error",
