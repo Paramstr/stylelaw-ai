@@ -8,8 +8,8 @@ export default function ResearchPage() {
     <div className="min-h-screen bg-white text-black relative">
       <NavHeader title="DONNA | RESEARCH" />
       
-      <main className="pt-32 px-6 lg:px-12">
-        <div className="max-w-7xl w-full mx-auto space-y-6 flex flex-col items-center">
+      <main className="flex-1 flex items-center min-h-screen pt-16">
+        <div className="max-w-7xl w-full mx-auto space-y-6 flex flex-col items-center px-6 lg:px-12 -mt-64">
           <FilterSection />
           <SearchBar />
         </div>

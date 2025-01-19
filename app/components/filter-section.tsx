@@ -31,7 +31,7 @@ type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
 export function FilterSection({ className }: FilterSectionProps) {
   const [date, setDate] = useState<Date>()
   const [timeRange, setTimeRange] = useState<TimeRange>('any')
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>(['family-law'])
   const [selectedRegion, setSelectedRegion] = useState<Region>('new-zealand')
   const [timeOpen, setTimeOpen] = useState(false)
   const [regionOpen, setRegionOpen] = useState(false)
