@@ -12,6 +12,8 @@ import { useState } from 'react'
 
 export function SearchBar() {
   const [selectedMode, setSelectedMode] = useState("enabled")
+  const [query, setQuery] = useState("")
+  const [isSearching, setIsSearching] = useState(false)
 
   const modes = {
     enabled: {
@@ -24,12 +26,53 @@ export function SearchBar() {
     }
   }
 
+  const handleSearch = async () => {
+    if (!query.trim()) return;
+    
+    setIsSearching(true);
+    try {
+      const response = await fetch('/api/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: query.trim(),
+          mode: selectedMode
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Search failed');
+      }
+
+      // Handle the search results here
+      console.log('Search results:', data.results);
+      
+    } catch (error) {
+      console.error('Search error:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }
+
   return (
     <div className="w-full max-w-4xl">
       <div className="border border-black">
         <div className="p-6 pb-12">
           <input 
             type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
             placeholder="Ask Donna about..."
             className="w-full text-lg font-serif text-[#6B7280] placeholder:text-[#6B7280] focus:outline-none"
           />
@@ -81,9 +124,11 @@ export function SearchBar() {
             </DropdownMenu>
           </div>
           <Button 
-            className="px-12 py-4 bg-black hover:bg-black/90 rounded-none font-serif text-xl h-full text-white"
+            onClick={handleSearch}
+            disabled={isSearching}
+            className="px-12 py-4 bg-black hover:bg-black/90 rounded-none font-serif text-xl h-full text-white disabled:opacity-50"
           >
-            Search
+            {isSearching ? 'Searching...' : 'Search'}
           </Button>
         </div>
       </div>
