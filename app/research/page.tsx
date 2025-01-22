@@ -23,6 +23,7 @@ export default function ResearchPage() {
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState('')
   const [currentQuery, setCurrentQuery] = useState('')
+  const [resultsCount, setResultsCount] = useState(10)
 
   const handleSearch = async (searchText: string) => {
     if (!searchText.trim()) return
@@ -33,7 +34,7 @@ export default function ResearchPage() {
     setCurrentQuery(searchText.trim())
     
     try {
-      const searchResults = await searchDocuments(searchText.trim(), 5)
+      const searchResults = await searchDocuments(searchText.trim(), resultsCount)
       setResults(searchResults as SearchResult[])
     } catch (error) {
       console.error('Search error:', error)
@@ -43,6 +44,13 @@ export default function ResearchPage() {
       setIsSearching(false)
     }
   }
+
+  const handleResultsCountChange = (count: number) => {
+    setResultsCount(count);
+    if (currentQuery) {
+      handleSearch(currentQuery);
+    }
+  };
 
   const hasResults = results.length > 0 || isSearching;
 
@@ -56,7 +64,9 @@ export default function ResearchPage() {
           <div className={`${!hasResults && 'min-h-[70vh] flex flex-col justify-center'}`}>
             <div className="w-full max-w-4xl mx-auto">
               <div className="mb-6">
-                <FilterSection />
+                <FilterSection 
+                  onResultsCountChange={handleResultsCountChange}
+                />
               </div>
               <div className="space-y-6">
                 <SearchBar onSearch={handleSearch} />

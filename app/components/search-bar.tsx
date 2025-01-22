@@ -109,9 +109,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           </Button>
         </div>
       </div>
-      <div className="mt-6 text-sm text-center text-[#6B7280]">
-        Start typing and see suggestions
-      </div>
+      
     </div>
   )
 }

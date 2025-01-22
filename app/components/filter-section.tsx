@@ -22,24 +22,29 @@ import { useOnClickOutside } from 'usehooks-ts'
 
 interface FilterSectionProps {
   className?: string
+  onResultsCountChange?: (count: number) => void
 }
 
 type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year' | 'custom';
 type Category = 'family-law' | 'court-of-appeal' | 'district-court' | 'high-court' | 'supreme-court';
 type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
+type ResultsCount = 10 | 20 | 50 | 100;
 
-export function FilterSection({ className }: FilterSectionProps) {
+export function FilterSection({ className, onResultsCountChange }: FilterSectionProps) {
   const [date, setDate] = useState<Date>()
   const [timeRange, setTimeRange] = useState<TimeRange>('any')
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(['family-law'])
   const [selectedRegion, setSelectedRegion] = useState<Region>('new-zealand')
+  const [resultsCount, setResultsCount] = useState<ResultsCount>(10)
   const [timeOpen, setTimeOpen] = useState(false)
   const [regionOpen, setRegionOpen] = useState(false)
   const [categoryOpen, setCategoryOpen] = useState(false)
+  const [countOpen, setCountOpen] = useState(false)
   
   const timeRef = useRef<HTMLDivElement>(null)
   const regionRef = useRef<HTMLDivElement>(null)
   const categoryRef = useRef<HTMLDivElement>(null)
+  const countRef = useRef<HTMLDivElement>(null)
 
   useOnClickOutside(timeRef, () => {
     setTimeOpen(false)
@@ -51,6 +56,10 @@ export function FilterSection({ className }: FilterSectionProps) {
 
   useOnClickOutside(categoryRef, () => {
     setCategoryOpen(false)
+  })
+
+  useOnClickOutside(countRef, () => {
+    setCountOpen(false)
   })
 
   const timeRangeLabels: Record<TimeRange, string> = {
@@ -87,6 +96,11 @@ export function FilterSection({ className }: FilterSectionProps) {
   const handleRegionSelect = (region: Region) => {
     setSelectedRegion(region)
   }
+
+  const handleResultsCountChange = (count: ResultsCount) => {
+    setResultsCount(count);
+    onResultsCountChange?.(count);
+  };
 
   const removeFilter = (type: 'category' | 'time' | 'region', value?: Category) => {
     if (type === 'category' && value) {
@@ -272,6 +286,41 @@ export function FilterSection({ className }: FilterSectionProps) {
                   <Building2 className="h-4 w-4 mr-2" />
                   Supreme Court
                 </Button>
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
+
+        {/* Results Count Filter */}
+        <Collapsible className="w-fit" open={countOpen} onOpenChange={setCountOpen}>
+          <div ref={countRef}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors"
+              >
+                <FileText className="h-4 w-4" fill="none" />
+                {resultsCount} Results
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
+              <div className="grid grid-cols-1 divide-y divide-black">
+                {[10, 20, 50, 100].map((count) => (
+                  <Button
+                    key={count}
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                      "w-full justify-start rounded-none h-9",
+                      resultsCount === count ? "bg-black text-white" : "hover:bg-black hover:text-white"
+                    )}
+                    onClick={() => handleResultsCountChange(count as ResultsCount)}
+                  >
+                    {count} Results
+                  </Button>
+                ))}
               </div>
             </CollapsibleContent>
           </div>
