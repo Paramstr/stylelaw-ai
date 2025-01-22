@@ -2,28 +2,6 @@ import { Group } from './types'
 
 export const GROUPS: Group[] = [
   {
-    name: 'ai',
-    title: 'AI',
-    commands: [
-      {
-        name: 'aiWriter',
-        label: 'AI Writer',
-        iconName: 'Sparkles',
-        description: 'Let AI finish your thoughts',
-        shouldBeHidden: editor => editor.isActive('columns'),
-        action: editor => editor.chain().focus().setAiWriter().run(),
-      },
-      {
-        name: 'aiImage',
-        label: 'AI Image',
-        iconName: 'Sparkles',
-        description: 'Generate an image from text',
-        shouldBeHidden: editor => editor.isActive('columns'),
-        action: editor => editor.chain().focus().setAiImage().run(),
-      },
-    ],
-  },
-  {
     name: 'format',
     title: 'Format',
     commands: [
@@ -85,16 +63,6 @@ export const GROUPS: Group[] = [
         aliases: ['todo'],
         action: editor => {
           editor.chain().focus().toggleTaskList().run()
-        },
-      },
-      {
-        name: 'toggleList',
-        label: 'Toggle List',
-        iconName: 'ListCollapse',
-        description: 'Toggles can show and hide content',
-        aliases: ['toggle'],
-        action: editor => {
-          editor.chain().focus().setDetails().run()
         },
       },
       {
@@ -168,17 +136,7 @@ export const GROUPS: Group[] = [
           editor.chain().focus().setHorizontalRule().run()
         },
       },
-      {
-        name: 'toc',
-        label: 'Table of Contents',
-        iconName: 'Book',
-        aliases: ['outline'],
-        description: 'Insert a table of contents',
-        shouldBeHidden: editor => editor.isActive('columns'),
-        action: editor => {
-          editor.chain().focus().insertTableOfContents().run()
-        },
-      },
+      
     ],
   },
 ]

@@ -1,6 +1,6 @@
 'use client'
 
-import { API } from '@/lib/api'
+import { API } from '../lib/api'
 
 import {
   BlockquoteFigure,
@@ -33,7 +33,6 @@ import {
   TrailingNode,
   Typography,
   Underline,
-  emojiSuggestion,
   Columns,
   Column,
   TaskItem,

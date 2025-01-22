@@ -1,105 +1,100 @@
-import axios from 'axios';
-import { chunkPDFDocument    } from './chunker';
+import axios, { AxiosError } from 'axios';
+import { chunkPDFDocument } from './chunker';
 import BM25 from 'okapibm25';
-import natural from 'natural';
+import winkTokenizer from 'wink-tokenizer';
+import porterStemmer from 'wink-porter2-stemmer';
 
-export class Vectorizer {   
-  private readonly CHUNK_SIZE = 8800; // Tokens per chunk
-  private readonly MAX_BATCH_SIZE = 32; // Maximum chunks per API call
- 
+const CHUNK_SIZE = 8800;
+const MAX_BATCH_SIZE = 32;
 
-  private async sendEmbeddingsRequest(input: string[], model: string, input_type: string): Promise<number[][]> {
-    const url = 'https://api.voyageai.com/v1/embeddings';
-    const headers = {
-      'Authorization': `Bearer ${process.env.VOYAGE_API_KEY}`,
-      'content-type': 'application/json'
-    };
-    
-    const data = {
-      input,
-      model,
-      input_type
-    };
-    
-    // Add debug logging
-    console.log('Debug: API Key present:', !!process.env.VOYAGE_API_KEY);
-    console.log('Debug: API Key length:', process.env.VOYAGE_API_KEY?.length);
-    console.log('Debug: Headers:', JSON.stringify(headers, null, 2));
-    console.log('Debug: Request Data:', JSON.stringify(data, null, 2));
+async function sendEmbeddingsRequest(input: string[], model: string, input_type: string): Promise<number[][]> {
+  const apiKey = process.env.VOYAGE_API_KEY;
+  if (!apiKey) {
+    console.error('Missing VOYAGE_API_KEY in environment variables');
+    throw new Error('Server configuration error: Voyage API key is missing');
+  }
 
-    try {
-      console.log('Debug: Sending request to:', url);
-      const response = await axios.post(url, data, { headers });
-      // The API returns embeddings in data.data[0].embedding
-      return [response.data.data[0].embedding]; // Return as array of arrays
-    } catch (error) {
-      const err = error as Error;
-      if (axios.isAxiosError(error)) {
-        console.error('API Error Details:', {
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          data: error.response?.data
-        });
-      }
-      console.error('Full error:', err);
-      throw err;
+  console.log('Starting embeddings request with:', {
+    inputLength: input.length,
+    model,
+    input_type,
+  });
+
+  const url = 'https://api.voyageai.com/v1/embeddings';
+  const headers = {
+    'Authorization': `Bearer ${apiKey}`,
+    'content-type': 'application/json'
+  };
+  
+  const data = { input, model, input_type };
+  
+  try {
+    console.log('Sending request to Voyage AI');
+    const response = await axios.post(url, data, { headers });
+    console.log('Received response from Voyage AI');
+    return [response.data.data[0].embedding];
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      console.error('Voyage API Error:', {
+        status: axiosError.response?.status,
+        statusText: axiosError.response?.statusText,
+        data: axiosError.response?.data,
+        headers: axiosError.response?.headers
+      });
+    } else {
+      console.error('Non-Axios error:', error);
     }
+    throw error;
   }
+}
 
-  async getEmbeddings(text: string): Promise<number[][]> {
-    const chunks = [text];
-    const embeddings: number[][] = [];
-    
-    for (let i = 0; i < chunks.length; i += this.MAX_BATCH_SIZE) {
-      const batchChunks = chunks.slice(i, i + this.MAX_BATCH_SIZE);
-      
-      try {
-        const response = await this.sendEmbeddingsRequest(batchChunks, "voyage-law-2", "document");
-        embeddings.push(...response);
-      } catch (error) {
-        throw error;
-      }
+export async function getEmbeddings(text: string): Promise<number[][]> {
+  const chunks = [text];
+  const embeddings: number[][] = [];
+  
+  for (let i = 0; i < chunks.length; i += MAX_BATCH_SIZE) {
+    const batchChunks = chunks.slice(i, i + MAX_BATCH_SIZE);
+    const response = await sendEmbeddingsRequest(batchChunks, "voyage-law-2", "document");
+    embeddings.push(...response);
+  }
+  
+  return embeddings;
+}
+
+export async function getBM25Tokens(text: string): Promise<{ indices: number[]; values: number[] }> {
+  const tokenizer = new winkTokenizer();
+  
+  // Tokenize and stem the input text
+  const tokens = tokenizer.tokenize(text.toLowerCase())
+    .filter(token => token.tag === 'word')
+    .map(token => porterStemmer(token.value))
+    .filter(Boolean);
+  
+  // Create a map of terms to their positions in our sparse vector
+  const termToIndex = new Map<string, number>();
+  const uniqueTerms = Array.from(new Set(tokens));
+  uniqueTerms.forEach((term, index) => {
+    termToIndex.set(term, index);
+  });
+  
+  // Calculate BM25 scores using the term as both document and query
+  const scores = BM25([tokens.join(' ')], uniqueTerms, {
+    k1: 1.2,
+    b: 0.75
+  }) as number[];
+  
+  // Convert to sparse vector format
+  const indices: number[] = [];
+  const values: number[] = [];
+  
+  uniqueTerms.forEach((term, index) => {
+    const score = scores[0];
+    if (score > 0) {
+      indices.push(termToIndex.get(term)!);
+      values.push(score);
     }
-    
-    return embeddings;
-  }
-
-  // BM25-style tokenization
-  getBM25Tokens(text: string): { indices: number[]; values: number[] } {
-    const tokenizer = new natural.WordTokenizer();
-    const stemmer = natural.PorterStemmer;
-    
-    // Tokenize and stem the input text
-    const tokens = tokenizer.tokenize(text.toLowerCase())
-      ?.map(token => stemmer.stem(token))
-      .filter(Boolean) ?? [];
-    
-    // Create a map of terms to their positions in our sparse vector
-    const termToIndex = new Map<string, number>();
-    const uniqueTerms = Array.from(new Set(tokens));
-    uniqueTerms.forEach((term, index) => {
-      termToIndex.set(term, index);
-    });
-    
-    // Calculate BM25 scores using the term as both document and query
-    // This gives us the term importance in the context of this document
-    const scores = BM25([tokens.join(' ')], uniqueTerms, {
-      k1: 1.2, // Standard BM25 parameter
-      b: 0.75  // Standard BM25 parameter
-    }) as number[]; // Type assertion to number[]
-    
-    // Convert to sparse vector format
-    const indices: number[] = [];
-    const values: number[] = [];
-    
-    uniqueTerms.forEach((term, index) => {
-      const score = scores[0]; // We only have one document
-      if (score > 0) {
-        indices.push(termToIndex.get(term)!);
-        values.push(score);
-      }
-    });
-    
-    return { indices, values };
-  }
+  });
+  
+  return { indices, values };
 } 

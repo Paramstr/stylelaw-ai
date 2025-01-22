@@ -1,8 +1,8 @@
 import { Editor, useEditorState } from '@tiptap/react'
 import { useCallback, useMemo } from 'react'
 import { ShouldShowProps } from '../../types'
-import { isCustomNodeSelected } from '@/lib/utils/isCustomNodeSelected'
-import { isTextSelected } from '@/lib/utils/isTextSelected'
+import { isCustomNodeSelected } from '../../../../lib/utils/isCustomNodeSelected'
+import { isTextSelected } from '../../../../lib/utils/isTextSelected'
 
 export const useTextmenuStates = (editor: Editor) => {
   const states = useEditorState({

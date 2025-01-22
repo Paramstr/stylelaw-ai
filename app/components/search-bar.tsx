@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button"
 import { Sparkles, HelpCircle, ChevronDown } from 'lucide-react'
 import {
   DropdownMenu,
@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useState } from 'react'
 
-export function SearchBar() {
+interface SearchBarProps {
+  onSearch: (query: string) => void
+}
+
+export function SearchBar({ onSearch }: SearchBarProps) {
   const [selectedMode, setSelectedMode] = useState("enabled")
   const [query, setQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
@@ -27,35 +31,8 @@ export function SearchBar() {
   }
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
-    
-    setIsSearching(true);
-    try {
-      const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: query.trim(),
-          mode: selectedMode
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Search failed');
-      }
-
-      // Handle the search results here
-      console.log('Search results:', data.results);
-      
-    } catch (error) {
-      console.error('Search error:', error);
-    } finally {
-      setIsSearching(false);
-    }
+    if (!query.trim()) return
+    onSearch(query)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

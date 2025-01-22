@@ -3,9 +3,7 @@ import { useEditor, useEditorState } from '@tiptap/react'
 import type { AnyExtension, Editor } from '@tiptap/core'
 
 import { ExtensionKit } from '@/extensions/extension-kit'
-import { initialContent } from '@/lib/data/initialContent'
-import { Ai } from '@/extensions/Ai'
-import { AiImage, AiWriter } from '@/extensions'
+import { initialContent } from '../lib/data/initialContent'
 
 declare global {
   interface Window {
@@ -14,11 +12,9 @@ declare global {
 }
 
 export const useBlockEditor = ({
-  aiToken,
   userId,
   userName = 'Maxi',
 }: {
-  aiToken?: string
   userId?: string
   userName?: string
 }) => {
@@ -35,20 +31,7 @@ export const useBlockEditor = ({
       },
       extensions: [
         ...ExtensionKit(),
-        aiToken
-          ? AiWriter.configure({
-              authorId: userId,
-              authorName: userName,
-            })
-          : undefined,
-        aiToken
-          ? AiImage.configure({
-              authorId: userId,
-              authorName: userName,
-            })
-          : undefined,
-        aiToken ? Ai.configure({ token: aiToken }) : undefined,
-      ].filter((e): e is AnyExtension => e !== undefined),
+      ],
       editorProps: {
         attributes: {
           autocomplete: 'off',

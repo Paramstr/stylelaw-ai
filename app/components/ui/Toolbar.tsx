@@ -1,8 +1,8 @@
 import React, { ButtonHTMLAttributes, HTMLProps, forwardRef } from 'react'
 
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { Surface } from './Surface'
-import { Button, ButtonProps } from './Button'
+import { Button, ButtonProps } from '@/components/ui/button'
 import Tooltip from './Tooltip'
 
 export type ToolbarWrapperProps = {
@@ -50,26 +50,24 @@ ToolbarDivider.displayName = 'Toolbar.Divider'
 
 export type ToolbarButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   active?: boolean
-  activeClassname?: string
   tooltip?: string
   tooltipShortcut?: string[]
-  buttonSize?: ButtonProps['buttonSize']
-  variant?: ButtonProps['variant']
+  size?: "default" | "sm" | "lg" | "icon"
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
 }
 
 const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   (
-    { children, buttonSize = 'icon', variant = 'ghost', className, tooltip, tooltipShortcut, activeClassname, ...rest },
+    { children, size = 'icon', variant = 'ghost', className, tooltip, tooltipShortcut, active, ...rest },
     ref,
   ) => {
     const buttonClass = cn('gap-1 min-w-[2rem] px-2 w-auto', className)
 
     const content = (
       <Button
-        activeClassname={activeClassname}
-        className={buttonClass}
+        className={cn(buttonClass, active && "bg-accent")}
         variant={variant}
-        buttonSize={buttonSize}
+        size={size}
         ref={ref}
         {...rest}
       >

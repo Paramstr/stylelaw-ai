@@ -17,7 +17,7 @@ import { useSidebar } from '@/hooks/useSidebar'
 export const BlockEditor = ({ aiToken }: { aiToken?: string }) => {
   const menuContainerRef = useRef(null)
   const leftSidebar = useSidebar()
-  const { editor } = useBlockEditor({ aiToken })
+  const { editor } = useBlockEditor({})
 
   if (!editor) {
     return null

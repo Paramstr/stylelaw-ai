@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 import { format } from "date-fns"
 import { CalendarIcon, Clock, Globe, Building2, FileText, Scale, ChevronDown, MapPin } from 'lucide-react'
 import { useState, useRef } from "react"
