@@ -1,22 +1,43 @@
-declare module 'wink-tokenizer' {
-  interface Token {
-    value: string;
-    tag: string;
-  }
 
-  class Tokenizer {
-    tokenize(text: string): Token[];
-  }
-
-  export default Tokenizer;
+export interface CaseMetadata {
+  // Basic case information
+  title: string;
+  citation: string;
+  date: string;
+  court: string;
+  
+  // Parties involved
+  parties: {
+    applicant: string;
+    respondent: string;
+  };
+  
+  // Case details
+  judges: string[];
+  lawyers: {
+    applicant: string[];
+    respondent: string[];
+  };
+  
+  // Case subject matter
+  subjectMatter: string[];
+  keywords: string[];
+  
+  // Document info
+  filename: string;
+  uploadedAt: string;
+  lastUpdated: string;
 }
 
-declare module 'wink-porter2-stemmer' {
-  function stem(word: string): string;
-  export default stem;
+export interface ProcessedCase {
+  metadata: CaseMetadata;
+  chunks: ProcessedChunk[];
 }
 
-declare module 'okapibm25' {
-  function BM25(documents: string[], terms: string[], options: { k1: number; b: number }): number[];
-  export default BM25;
+export interface ProcessedChunk {
+  content: string;
+  metadata: {
+    filename: string;
+    chunkIndex: number;
+  };
 } 

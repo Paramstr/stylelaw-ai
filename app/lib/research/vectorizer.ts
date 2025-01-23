@@ -71,29 +71,26 @@ export async function getBM25Tokens(text: string): Promise<{ indices: number[]; 
     .map(token => porterStemmer(token.value))
     .filter(Boolean);
   
-  // Create a map of terms to their positions in our sparse vector
-  const termToIndex = new Map<string, number>();
-  const uniqueTerms = Array.from(new Set(tokens));
-  uniqueTerms.forEach((term, index) => {
-    termToIndex.set(term, index);
+  // Create a map of terms to their frequencies
+  const termFreq = new Map<string, number>();
+  tokens.forEach(term => {
+    termFreq.set(term, (termFreq.get(term) || 0) + 1);
   });
   
-  // Calculate BM25 scores using the term as both document and query
-  const scores = BM25([tokens.join(' ')], uniqueTerms, {
-    k1: 1.2,
-    b: 0.75
-  }) as number[];
-  
-  // Convert to sparse vector format
+  // Convert to sparse vector format where indices are term positions
+  // and values are term frequencies (we'll let Upstash handle the IDF part)
+  const uniqueTerms = Array.from(termFreq.keys()).sort();
   const indices: number[] = [];
   const values: number[] = [];
   
   uniqueTerms.forEach((term, index) => {
-    const score = scores[0];
-    if (score > 0) {
-      indices.push(termToIndex.get(term)!);
-      values.push(score);
-    }
+    const tf = termFreq.get(term)!;
+    // Apply BM25-style term frequency saturation
+    const k1 = 1.2;
+    const normalizedTf = (tf * (k1 + 1)) / (tf + k1);
+    
+    indices.push(index);
+    values.push(normalizedTf);
   });
   
   return { indices, values };

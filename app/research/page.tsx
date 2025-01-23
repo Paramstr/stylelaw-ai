@@ -28,16 +28,22 @@ export default function ResearchPage() {
   const handleSearch = async (searchText: string) => {
     if (!searchText.trim()) return
     
+    console.log('Starting search in page component:', { searchText, resultsCount });
     setIsSearching(true)
     setError('')
     setResults([])
     setCurrentQuery(searchText.trim())
     
     try {
+      console.log('Calling searchDocuments...');
       const searchResults = await searchDocuments(searchText.trim(), resultsCount)
+      console.log('Search completed:', { 
+        resultsCount: searchResults?.length,
+        hasResults: !!searchResults?.length
+      });
       setResults(searchResults as SearchResult[])
     } catch (error) {
-      console.error('Search error:', error)
+      console.error('Search error in page component:', error)
       setError(error instanceof Error ? error.message : 'Search failed')
       setResults([])
     } finally {
@@ -46,6 +52,7 @@ export default function ResearchPage() {
   }
 
   const handleResultsCountChange = (count: number) => {
+    console.log('Results count changed:', { count });
     setResultsCount(count);
     if (currentQuery) {
       handleSearch(currentQuery);
