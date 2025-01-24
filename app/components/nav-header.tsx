@@ -6,7 +6,7 @@ interface NavHeaderProps {
 
 export function NavHeader({ title }: NavHeaderProps) {
   return (
-    <header className="sticky top-0 bg-black">
+    <header className="sticky top-0 bg-black z-50">
       <nav className="flex justify-between items-center px-6 py-4 lg:px-12">
         <Link href="/" className="text-white text-2xl font-serif">
           {title}

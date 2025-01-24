@@ -6,6 +6,7 @@ import { SiteFooter } from '../components/site-footer'
 import { FilterSection } from '../components/filter-section'
 import { SearchBar } from '../components/search-bar'
 import CaseSearchResult from '../components/case-search-result'
+import { SearchLoading } from '../components/search-loading'
 import { searchDocuments } from '../lib/research/search-client'
 import type { CaseData } from '@/../types/caseData'
 
@@ -121,46 +122,37 @@ export default function ResearchPage() {
   const hasResults = results.length > 0 || isSearching;
 
   return (
-    <div className="min-h-screen bg-white text-black relative">
+    <div className="min-h-screen flex flex-col">
       <NavHeader title="DONNA | RESEARCH" />
-      
-      <main className="min-h-screen pt-16 pb-32">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          {/* Search controls section */}
-          <div className={`${!hasResults && 'min-h-[70vh] flex flex-col justify-center'}`}>
-            <div className="w-full max-w-4xl mx-auto">
-              <div className="mb-6">
-                <FilterSection />
-              </div>
-              <div className="space-y-6">
-                <SearchBar onSearch={handleSearch} />
-                {error && (
-                  <div className="text-red-500 text-center p-2 rounded bg-red-50">
-                    {error}
-                  </div>
-                )}
-              </div>
-            </div>
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="w-full max-w-4xl mx-auto space-y-6 mt-6">
+            <FilterSection />
+            <SearchBar onSearch={handleSearch} />
           </div>
+          
+          {isSearching && <SearchLoading />}
+          
+          {results.length > 0 && !isSearching && (
+            <>
+              <h2 className="text-base font-medium text-gray-500 mt-24 mb-4">Search Results</h2>
+              <div className="space-y-6">
+                {results.map((result) => (
+                  <CaseSearchResult
+                    key={result.id}
+                    caseData={result.metadata}
+                  />
+                ))}
+              </div>
+            </>
+          )}
 
-          {/* Results section */}
-          {hasResults && (
-            <div className="mt-8 space-y-8">
-              {results.map((result) => (
-                <CaseSearchResult 
-                  key={result.id}
-                  caseData={result.metadata}
-                />
-              ))}
-            </div>
+          {error && (
+            <div className="text-red-500 mt-4">{error}</div>
           )}
         </div>
       </main>
-
-      <div className="fixed bottom-0 left-0 right-0">
-        <div className="h-32 bg-cover bg-center" />
-        <SiteFooter />
-      </div>
+      <SiteFooter />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export function SiteFooter() {
   return (
-    <footer className="absolute bottom-0 left-0 right-0 p-6 text-gray-500 text-sm bg-black">
+    <footer className="w-full p-6 text-gray-500 text-sm bg-black">
       <div className="flex flex-col md:flex-row gap-4 justify-end">
         <Link href="/careers" className="hover:text-white transition-colors">
           Careers

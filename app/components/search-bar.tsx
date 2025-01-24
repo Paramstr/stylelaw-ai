@@ -44,7 +44,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <div className="w-full max-w-4xl">
-      <div className="border border-black">
+      <div className="border border-black relative z-0">
         <div className="p-6 pb-12">
           <input 
             type="text"
@@ -68,7 +68,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                 >
                   <Sparkles 
                     className={`w-4 h-4 transition-all duration-300 ${
-                      selectedMode === "enabled" ? 'text-blue-500 filter drop-shadow-[0_0_3px_rgba(59,130,246,0.5)]' : 'text-yellow-500 filter drop-shadow-[0_0_3px_rgba(234,179,8,0.5)]'
+                      selectedMode === "enabled" ? 'text-green-500 filter drop-shadow-[0_0_3px_rgba(59,130,246,0.5)]' : 'text-yellow-500 filter drop-shadow-[0_0_3px_rgba(234,179,8,0.5)]'
                     }`} 
                   />
                   <span className="text-sm">

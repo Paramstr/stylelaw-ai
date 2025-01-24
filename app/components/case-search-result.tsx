@@ -45,10 +45,10 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
   }
 
   return (
-    <Card className="bg-white border border-black/10 rounded-none border-l-[3px] border-l-black">
-      <motion.div initial={false} animate={isExpanded ? "expanded" : "collapsed"} className="divide-y divide-black/10">
+    <Card className="bg-white border border-black rounded-none">
+      <div className="divide-y divide-black">
         {/* Header Section */}
-        <div className="p-8">
+        <div className="p-8 relative">
           <div className="flex justify-between items-start mb-6">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
@@ -68,6 +68,16 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                 </motion.p>
               )}
             </div>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="group p-2 bg-black hover:bg-black/80 transition-colors"
+            >
+              <ChevronDown
+                className={`w-5 h-5 text-white transition-transform duration-200 ${
+                  isExpanded ? "transform rotate-180" : ""
+                }`}
+              />
+            </button>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-sm font-serif text-black/60 mb-6">
@@ -107,78 +117,76 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
           {caseData.aiSummary && (
             <div className="bg-[#2F4F4F] p-6 rounded-sm mt-6 mb-6">
               <h4 className="text-sm font-medium mb-2 text-white">AI Summary</h4>
-              <p className="text-sm font-serif text-white/95">{caseData.aiSummary}</p>
+              <p className="text-sm text-white/95">{caseData.aiSummary}</p>
             </div>
           )}
         </div>
 
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              <div className="border-t border-black/10">
-                <div className="flex justify-center">
-                  {["Details", "Issues", "Significance", "History", "Authorities"].map((tab) => (
-                    <button
-                      key={tab}
-                      className={`px-4 py-2 text-sm font-medium transition-colors ${
-                        activeTab.toLowerCase() === tab.toLowerCase()
-                          ? "text-black border-b-2 border-black"
-                          : "text-black/60 hover:text-black hover:bg-black/5"
-                      }`}
-                      onClick={() => handleTabChange(tab.toLowerCase())}
-                    >
-                      {tab}
-                    </button>
-                  ))}
+        <div className="relative">
+          <AnimatePresence initial={false} mode="wait">
+            {isExpanded && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ 
+                  height: {
+                    duration: 0.2,
+                    ease: "easeInOut"
+                  },
+                  opacity: { duration: 0.15 }
+                }}
+                className="overflow-hidden"
+              >
+                <div className="border-t border-black">
+                  <div className="flex justify-center">
+                    {["Details", "Issues", "Significance", "History", "Authorities"].map((tab) => (
+                      <button
+                        key={tab}
+                        className={`px-4 py-2 text-sm font-medium transition-colors ${
+                          activeTab.toLowerCase() === tab.toLowerCase()
+                            ? "text-black border-b-2 border-black"
+                            : "text-black/60 hover:text-black hover:bg-black/5"
+                        }`}
+                        onClick={() => handleTabChange(tab.toLowerCase())}
+                      >
+                        {tab}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {activeTab === "details" && (
-                    <DetailsTab
-                      classification={caseData.classification}
-                      authorityStatus={caseData.authorityStatus}
-                      participants={caseData.participants}
-                      strategy={caseData.strategy}
-                    />
-                  )}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {activeTab === "details" && (
+                      <DetailsTab
+                        classification={caseData.classification}
+                        authorityStatus={caseData.authorityStatus}
+                        participants={caseData.participants}
+                        strategy={caseData.strategy}
+                      />
+                    )}
 
-                  {activeTab === "issues" && <IssuesTab strategy={caseData.strategy} />}
+                    {activeTab === "issues" && <IssuesTab strategy={caseData.strategy} />}
 
-                  {activeTab === "significance" && <SignificanceTab practice={caseData.practice} />}
+                    {activeTab === "significance" && <SignificanceTab practice={caseData.practice} />}
 
-                  {activeTab === "history" && <HistoryTab history={caseData.history} />}
+                    {activeTab === "history" && <HistoryTab history={caseData.history} />}
 
-                  {activeTab === "authorities" && <AuthoritiesTab authorities={caseData.authorities} />}
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div
-          className="py-1 px-4 flex justify-center items-center cursor-pointer hover:bg-black/5 transition-colors"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <div className="flex flex-col items-center">
-            <ChevronDown
-              className={`w-4 h-4 text-black/40 transition-transform ${isExpanded ? "transform rotate-180" : ""}`}
-            />
-            <span className="text-[10px] text-black/40">{isExpanded ? "Collapse" : "Expand for more details"}</span>
-          </div>
+                    {activeTab === "authorities" && <AuthoritiesTab authorities={caseData.authorities} />}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </motion.div>
+      </div>
     </Card>
   )
 }
