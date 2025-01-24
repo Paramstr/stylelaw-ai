@@ -152,9 +152,6 @@ export default function ResearchPage() {
   const handleResultsCountChange = (count: number) => {
     console.log('Results count changed:', { count });
     setResultsCount(count);
-    if (currentQuery) {
-      handleSearch(currentQuery);
-    }
   };
 
   const hasResults = results.length > 0 || isSearching;
