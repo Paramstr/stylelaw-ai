@@ -10,6 +10,7 @@ import { SearchLoading, SearchProgress } from '../components/search-loading'
 import { searchDocuments } from '../lib/research/search-client'
 import type { CaseData } from '@/../types/caseData'
 import { useSearchParams } from 'next/navigation'
+import WelcomeCard from '../components/welcome-card'
 
 interface SearchResult {
   id: string
@@ -159,21 +160,26 @@ export default function ResearchPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavHeader title="DONNA | RESEARCH" />
-      <main className="flex-1 px-8 py-8">
+      <main className="flex-1 px-4 md:px-8 py-4 md:py-8">
         <div className="w-full">
-          <div className="w-full max-w-4xl mx-auto space-y-6 mt-12">
+          <div className="w-full max-w-4xl mx-auto space-y-4 md:space-y-6 mt-6 md:mt-12">
+            <WelcomeCard />
             <FilterSection onResultsCountChange={handleResultsCountChange} />
             <SearchBar onSearch={handleSearch} />
           </div>
           
-          {isSearching && <SearchLoading progress={searchProgress} />}
+          {isSearching && (
+            <div className="max-w-[1800px] mx-auto mt-12 md:mt-24 flex justify-center">
+              <SearchLoading progress={searchProgress} />
+            </div>
+          )}
           
           {results.length > 0 && !isSearching && (
             <>
-              <h2 className="text-base font-medium text-gray-500 mt-24 mb-4">
+              <h2 className="text-base font-medium text-gray-500 mt-12 md:mt-24 mb-4 max-w-[1800px] mx-auto">
                 Showing {results.length} Results
               </h2>
-              <div className="space-y-6 w-full">
+              <div className="space-y-4 md:space-y-6 w-full max-w-[1800px] mx-auto">
                 {results.map((result) => (
                   <CaseSearchResult
                     key={result.id}

@@ -30,7 +30,7 @@ type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year' | 'custom';
 type Category = 'family-law' | 'court-of-appeal' | 'district-court' | 'high-court' | 'supreme-court';
 type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
 
-export const RESULTS_COUNT_VALUES = [1, 3, 5, 10, 20, 50, 100] as const;
+export const RESULTS_COUNT_VALUES = [1, 3, 5, 10] as const;
 export const DEFAULT_RESULTS_COUNT = 3;
 export type ResultsCount = typeof RESULTS_COUNT_VALUES[number];
 

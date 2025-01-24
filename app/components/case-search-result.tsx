@@ -65,18 +65,18 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
     <Card className="bg-white border border-black rounded-none w-full">
       <div className="divide-black">
         {/* Header Section */}
-        <div className="p-8 relative grid grid-cols-[1fr,800px] gap-6">
+        <div className="p-4 md:p-8 relative grid grid-cols-1 md:grid-cols-[1fr,800px] gap-4 md:gap-6">
           {/* Left Column - Details */}
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <motion.div className="text-sm font-mono">{caseData.coreInfo.citation}</motion.div>
+          <div className="space-y-4 md:space-y-6">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <motion.div className="text-sm font-mono break-all">{caseData.coreInfo.citation}</motion.div>
                 {caseData.pdfFile && (
-                  <span className="text-sm font-mono text-black/40">{caseData.pdfFile}</span>
+                  <span className="text-sm font-mono text-black/40 break-all">{caseData.pdfFile}</span>
                 )}
               </div>
               {caseData.coreInfo.title && (
-                <motion.h3 className="text-2xl font-serif tracking-tight">{caseData.coreInfo.title}</motion.h3>
+                <motion.h3 className="text-xl md:text-2xl font-serif tracking-tight">{caseData.coreInfo.title}</motion.h3>
               )}
               {caseData.coreInfo.status && (
                 <Badge variant="outline" className="rounded-none border-0 bg-black text-white">
@@ -85,7 +85,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 text-sm font-serif text-black/60">
+            <div className="flex flex-wrap items-center gap-3 md:gap-6 text-sm font-serif text-black/60">
               {caseData.coreInfo.court && (
                 <div className="flex items-center gap-2">
                   <Scale className="h-4 w-4" />
@@ -121,20 +121,29 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
           </div>
 
           {/* Right Column - Controls & Summary */}
-          <div className="flex flex-col items-end gap-4">
+          <div className="flex flex-col items-end gap-8">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="group p-2 bg-black hover:bg-black/80 transition-colors"
+              className={`group p-2  flex items-center gap-0 hover:gap-2 transition-all duration-200 ${
+                isExpanded 
+                  ? "bg-white border border-black hover:bg-black/5" 
+                  : "bg-black hover:bg-black/90"
+              }`}
             >
               <ChevronDown
-                className={`w-5 h-5 text-white transition-transform duration-200 ${
-                  isExpanded ? "transform rotate-180" : ""
-                }`}
+                className={`w-5 h-5 transition-transform duration-200 ${
+                  isExpanded ? "text-black" : "text-white"
+                } ${isExpanded ? "transform rotate-180" : ""}`}
               />
+              <span className={`text-sm overflow-hidden w-0 group-hover:w-[4.2rem] whitespace-nowrap transition-all duration-200 ${
+                isExpanded ? "text-black" : "text-white"
+              }`}>
+                {isExpanded ? "Close" : "Expand"}
+              </span>
             </button>
             {caseData.aiSummary && (
-              <div className="bg-[#2F4F4F] p-6 w-full">
-                <h4 className="text-base font-medium mb-3 text-white uppercase tracking-wide">AI Summary</h4>
+              <div className="bg-[#2F4F4F] p-4 md:p-6 w-full">
+                <h4 className="text-base font-medium mb-2 md:mb-3 text-white uppercase tracking-wide">AI Summary</h4>
                 <p className="text-sm text-white/95">{caseData.aiSummary}</p>
               </div>
             )}
@@ -157,10 +166,10 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                 }}
                 className="overflow-hidden"
               >
-                <div className="grid grid-cols-[1fr,1fr] gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-4 md:gap-6">
                   {/* Left Column - Tabs and Content */}
-                  <div className="min-h-[800px]">
-                    <div className="flex justify-center">
+                  <div className="min-h-[400px] md:min-h-[800px]">
+                    <div className="flex flex-wrap justify-start md:justify-center">
                       {[
                         { name: "Details", icon: FileText },
                         { name: "Issues", icon: AlertCircle },
@@ -170,7 +179,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                       ].map(({ name, icon: Icon }) => (
                         <button
                           key={name}
-                          className={`px-6 py-3 text-[15px] font-medium transition-all flex items-center gap-2 ${
+                          className={`px-3 md:px-6 py-2 md:py-3 text-[14px] md:text-[15px] font-medium transition-all flex items-center gap-2 ${
                             activeTab.toLowerCase() === name.toLowerCase()
                               ? "text-black border-b-2 border-black"
                               : "text-black/60 hover:text-black"
@@ -236,10 +245,10 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                   </div>
 
                   {/* Right Column - PDF Viewer */}
-                  <div className="min-h-[800px]">
+                  <div className="min-h-[400px] md:min-h-[800px]">
                     <div className="h-full">
                       <div className="h-full">
-                        <div className="h-[calc(100%-3rem)] p-8">
+                        <div className="h-[calc(100%-3rem)] p-4 md:p-8">
                           <PDFViewer 
                             fileUrl={`/api/pdf/${caseData.pdfFile}`}
                             base64Data={caseData.pdfBase64}
@@ -260,4 +269,3 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
 }
 
 export default CaseSearchResult
-

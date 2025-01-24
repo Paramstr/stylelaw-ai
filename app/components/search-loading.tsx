@@ -12,7 +12,7 @@ export type SearchProgress = {
 
 const loadingMessages = [
   {
-    message: "Sending query to search engine...",
+    message: "Sending query to neural search engine...",
     requiredState: "queryStarted"
   },
   {
@@ -20,7 +20,7 @@ const loadingMessages = [
     requiredState: "upstashComplete"
   },
   {
-    message: "Fetching case metadata...",
+    message: "Analyzing case details...",
     requiredState: "metadataStarted"
   },
   {

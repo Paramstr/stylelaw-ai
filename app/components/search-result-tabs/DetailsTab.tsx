@@ -28,7 +28,7 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
       {/* Outcome Section */}
       {strategy?.outcome && (
         <div className="p-6 border border-black/10 bg-emerald-50/50 hover:bg-emerald-50/80 transition-colors">
-          <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+          <h4 className="text-base font-semibold mb-4 flex items-center gap-2">
             <Gavel className="w-4 h-4" />
             Outcome
           </h4>
@@ -81,31 +81,31 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Proceeding Details */}
           {classification?.proceeding && (
-            <div className="p-6">
-              <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+            <div className={`p-6 ${!classification?.monetaryValue ? "md:col-span-2" : ""}`}>
+              <h4 className="text-base font-semibold mb-4 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Proceeding Details
               </h4>
-              <dl className="space-y-3">
-                {classification.proceeding.type && (
-                  <div className="flex items-center justify-between gap-4">
-                    <dt className="text-sm text-black/40 shrink-0">Type</dt>
-                    <dd className="text-sm font-medium text-right">{classification.proceeding.type}</dd>
-                  </div>
-                )}
-                {classification.proceeding.level && (
-                  <div className="flex items-center justify-between gap-4">
-                    <dt className="text-sm text-black/40 shrink-0">Level</dt>
-                    <dd className="text-sm font-medium text-right">{classification.proceeding.level}</dd>
-                  </div>
-                )}
-                {classification.proceeding.nature && (
-                  <div className="flex items-center justify-between gap-4">
-                    <dt className="text-sm text-black/40 shrink-0">Nature</dt>
-                    <dd className="text-sm font-medium text-right">{classification.proceeding.nature}</dd>
-                  </div>
-                )}
-              </dl>
+              <div className="grid gap-4">
+                <div>
+                  <h5 className="text-xs font-medium text-black/40 mb-2">Type</h5>
+                  {classification.proceeding.type && (
+                    <p className="text-sm">{classification.proceeding.type}</p>
+                  )}
+                </div>
+                <div>
+                  <h5 className="text-xs font-medium text-black/40 mb-2">Level</h5>
+                  {classification.proceeding.level && (
+                    <p className="text-sm">{classification.proceeding.level}</p>
+                  )}
+                </div>
+                <div>
+                  <h5 className="text-xs font-medium text-black/40 mb-2">Nature</h5>
+                  {classification.proceeding.nature && (
+                    <p className="text-sm">{classification.proceeding.nature}</p>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -130,44 +130,44 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
 
       {/* Authority Status */}
       {authorityStatus && (
-        <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
-          <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+        <div className="p-6">
+          <h4 className="text-base font-semibold mb-4 flex items-center gap-2">
             <FileText className="w-4 h-4" />
             Authority Status
           </h4>
-          <dl className="space-y-3">
-            {authorityStatus.type && (
-              <div className="flex justify-between">
-                <dt className="text-sm text-black/40">Type</dt>
-                <dd className="text-sm font-medium">{authorityStatus.type}</dd>
-              </div>
-            )}
-            {authorityStatus.area && (
-              <div className="flex justify-between">
-                <dt className="text-sm text-black/40">Area</dt>
-                <dd className="text-sm font-medium">{authorityStatus.area}</dd>
-              </div>
-            )}
-            {authorityStatus.impact && (
-              <div className="flex justify-between">
-                <dt className="text-sm text-black/40">Impact</dt>
-                <dd className="text-sm font-medium">{authorityStatus.impact}</dd>
-              </div>
-            )}
-            {authorityStatus.previousAuthority && (
-              <div className="flex justify-between">
-                <dt className="text-sm text-black/40">Previous Authority</dt>
-                <dd className="text-sm font-medium">{authorityStatus.previousAuthority}</dd>
-              </div>
-            )}
-          </dl>
+          <div className="grid gap-4">
+            <div>
+              <h5 className="text-xs font-medium text-black/40 mb-2">Type</h5>
+              {authorityStatus.type && (
+                <p className="text-sm">{authorityStatus.type}</p>
+              )}
+            </div>
+            <div>
+              <h5 className="text-xs font-medium text-black/40 mb-2">Area</h5>
+              {authorityStatus.area && (
+                <p className="text-sm">{authorityStatus.area}</p>
+              )}
+            </div>
+            <div>
+              <h5 className="text-xs font-medium text-black/40 mb-2">Impact</h5>
+              {authorityStatus.impact && (
+                <p className="text-sm">{authorityStatus.impact}</p>
+              )}
+            </div>
+            <div>
+              <h5 className="text-xs font-medium text-black/40 mb-2">Previous Authority</h5>
+              {authorityStatus.previousAuthority && (
+                <p className="text-sm">{authorityStatus.previousAuthority}</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
       {/* Participants Section */}
       {(participants?.bench || []).length > 0 && (
         <div className="p-6">
-          <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+          <h4 className="text-base font-semibold mb-4 flex items-center gap-2">
             <Users className="w-4 h-4" />
             Participants
           </h4>
@@ -205,10 +205,13 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
             {((participants?.parties?.applicants || []).length > 0 || (participants?.parties?.respondents || []).length > 0) && (
               <div>
                 <h5 className="text-xs font-medium text-black/40 mb-2">Parties</h5>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {(participants?.parties?.applicants || []).length > 0 && (
                     <div>
-                      <h6 className="text-xs font-medium text-black/60 mb-1">Applicants</h6>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="h-[1px] w-3 bg-black/10"></div>
+                        <span className="text-xs text-black/40">Applicants</span>
+                      </div>
                       <ul className="space-y-1">
                         {(participants?.parties?.applicants || []).map((applicant, index) => (
                           <li key={index} className="text-sm">
@@ -220,7 +223,10 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
                   )}
                   {(participants?.parties?.respondents || []).length > 0 && (
                     <div>
-                      <h6 className="text-xs font-medium text-black/60 mb-1">Respondents</h6>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="h-[1px] w-3 bg-black/10"></div>
+                        <span className="text-xs text-black/40">Respondents</span>
+                      </div>
                       <ul className="space-y-1">
                         {(participants?.parties?.respondents || []).map((respondent, index) => (
                           <li key={index} className="text-sm">

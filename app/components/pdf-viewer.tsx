@@ -73,7 +73,7 @@ export default function PDFViewer({ fileUrl, base64Data, searchQuery }: PDFViewe
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
-      <div className="w-full h-[calc(100vh-350px)] border border-gray-200 overflow-hidden">
+      <div className="w-full h-[calc(100vh-150px)] border border-gray-200 overflow-hidden">
         <Viewer
           fileUrl={pdfUrl}
           plugins={[defaultLayoutPluginInstance, searchPluginInstance]}
