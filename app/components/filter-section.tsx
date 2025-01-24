@@ -29,20 +29,23 @@ interface FilterSectionProps {
 type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year' | 'custom';
 type Category = 'family-law' | 'court-of-appeal' | 'district-court' | 'high-court' | 'supreme-court';
 type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
-type ResultsCount = 1 | 3 | 5 | 10 | 20 | 50 | 100;
+
+export const RESULTS_COUNT_VALUES = [1, 3, 5, 10, 20, 50, 100] as const;
+export const DEFAULT_RESULTS_COUNT = 3;
+export type ResultsCount = typeof RESULTS_COUNT_VALUES[number];
 
 export function FilterSection({ className, onResultsCountChange }: FilterSectionProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  const currentCount = parseInt(searchParams.get('count') || '3', 10)
+  const currentCount = parseInt(searchParams.get('count') ?? DEFAULT_RESULTS_COUNT.toString(), 10)
   const currentQuery = searchParams.get('q') || ''
   
   const [date, setDate] = useState<Date>()
   const [timeRange, setTimeRange] = useState<TimeRange>('any')
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(['family-law'])
   const [selectedRegion, setSelectedRegion] = useState<Region>('new-zealand')
-  const [resultsCount, setResultsCount] = useState<ResultsCount>(currentCount as ResultsCount || 3)
+  const [resultsCount, setResultsCount] = useState<ResultsCount>(DEFAULT_RESULTS_COUNT)
   const [timeOpen, setTimeOpen] = useState(false)
   const [regionOpen, setRegionOpen] = useState(false)
   const [categoryOpen, setCategoryOpen] = useState(false)
@@ -106,12 +109,8 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
 
   const handleResultsCountChange = (count: ResultsCount) => {
     setResultsCount(count);
-    onResultsCountChange?.(count);
-    // Update URL
-    const params = new URLSearchParams(searchParams)
-    params.set('count', count.toString())
-    router.push(`/research?${params.toString()}`)
-  };
+    onResultsCountChange?.(count)
+  }
 
   const removeFilter = (type: 'category' | 'time' | 'region', value?: Category) => {
     if (type === 'category' && value) {
@@ -318,7 +317,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
             </CollapsibleTrigger>
             <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
-                {[1, 3, 5, 10, 20, 50, 100].map((count) => (
+                {RESULTS_COUNT_VALUES.map((count) => (
                   <Button
                     key={count}
                     variant="ghost"
@@ -327,7 +326,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
                       "w-full justify-start rounded-none h-9",
                       resultsCount === count ? "bg-black text-white" : "hover:bg-black hover:text-white"
                     )}
-                    onClick={() => handleResultsCountChange(count as ResultsCount)}
+                    onClick={() => handleResultsCountChange(count)}
                   >
                     {count} Results
                   </Button>

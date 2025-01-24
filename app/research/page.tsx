@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { NavHeader } from '../components/nav-header'
 import { SiteFooter } from '../components/site-footer'
-import { FilterSection } from '../components/filter-section'
+import { FilterSection, DEFAULT_RESULTS_COUNT } from '../components/filter-section'
 import { SearchBar } from '../components/search-bar'
 import CaseSearchResult from '../components/case-search-result'
 import { SearchLoading, SearchProgress } from '../components/search-loading'
@@ -24,13 +24,12 @@ interface RawSearchResult {
 
 export default function ResearchPage() {
   const searchParams = useSearchParams()
-  const initialCount = parseInt(searchParams.get('count') || '3', 10)
   
   const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState('')
   const [currentQuery, setCurrentQuery] = useState('')
-  const [resultsCount, setResultsCount] = useState(initialCount)
+  const [resultsCount, setResultsCount] = useState(DEFAULT_RESULTS_COUNT)
   const [searchProgress, setSearchProgress] = useState<SearchProgress>({
     queryStarted: false,
     upstashComplete: false,

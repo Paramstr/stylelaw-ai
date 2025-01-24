@@ -118,8 +118,8 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
           </div>
 
           {caseData.aiSummary && (
-            <div className="bg-[#2F4F4F] p-6 rounded-sm mt-6 mb-6">
-              <h4 className="text-sm font-medium mb-2 text-white">AI Summary</h4>
+            <div className="bg-[#2F4F4F] p-6 mt-6 mb-6">
+              <h4 className="text-base font-medium mb-3 text-white uppercase tracking-wide">AI Summary</h4>
               <p className="text-sm text-white/95">{caseData.aiSummary}</p>
             </div>
           )}
@@ -141,22 +141,27 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                 }}
                 className="overflow-hidden"
               >
-                <div className="border-black">
-                  <div className="flex justify-center">
-                    {["Details", "Issues", "Significance", "History", "Authorities"].map((tab) => (
-                      <button
-                        key={tab}
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${
-                          activeTab.toLowerCase() === tab.toLowerCase()
-                            ? "text-black border-b-2 border-black"
-                            : "text-black/60 hover:text-black hover:bg-black/5"
-                        }`}
-                        onClick={() => handleTabChange(tab.toLowerCase())}
-                      >
-                        {tab}
-                      </button>
-                    ))}
-                  </div>
+                <div className="flex justify-center border-b border-black/10">
+                  {[
+                    { name: "Details", icon: FileText },
+                    { name: "Issues", icon: AlertCircle },
+                    { name: "Significance", icon: Scale },
+                    { name: "History", icon: History },
+                    { name: "Authorities", icon: Book }
+                  ].map(({ name, icon: Icon }) => (
+                    <button
+                      key={name}
+                      className={`px-6 py-3 text-[15px] font-medium transition-all flex items-center gap-2 ${
+                        activeTab.toLowerCase() === name.toLowerCase()
+                          ? "text-black border-b-2 border-black"
+                          : "text-black/60 hover:text-black"
+                      }`}
+                      onClick={() => handleTabChange(name.toLowerCase())}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {name}
+                    </button>
+                  ))}
                 </div>
 
                 <AnimatePresence mode="wait">

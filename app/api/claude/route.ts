@@ -59,7 +59,6 @@ export async function POST(request: NextRequest) {
         prompt = `You are a legal document analyzer. Extract comprehensive metadata from the given legal case text. Format the response as a JSON object matching this TypeScript interface:
 
 interface CaseData {
-  pdfFile: string;
   coreInfo: {
     citation: string;
     title: string;

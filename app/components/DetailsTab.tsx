@@ -24,6 +24,57 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
 
   return (
     <div className="p-8 grid gap-8">
+      {/* Outcome Section */}
+      {strategy?.outcome && (
+        <div className="p-6 border border-black/10 bg-emerald-50/50 hover:bg-emerald-50/80 transition-colors">
+          <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+            <Gavel className="w-4 h-4" />
+            Outcome
+          </h4>
+          <div className="space-y-4">
+            {strategy.outcome.summary && (
+              <Badge variant="outline" className="rounded-none bg-black text-white border-0">
+                {strategy.outcome.summary}
+              </Badge>
+            )}
+            {(strategy.outcome.disposition || []).length > 0 && (
+              <ul className="grid gap-3">
+                {(strategy.outcome.disposition || []).map((point, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <Scale className="w-4 h-4 text-black/40 mt-1" />
+                    <span className="text-sm text-black/60">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {strategy.outcome?.paragraphs?.disposition && strategy.outcome.paragraphs.disposition.length > 0 && (
+              <div className="text-sm flex items-center">
+                <span className="font-medium">Disposition:</span>
+                <CitationButton paragraphs={strategy.outcome.paragraphs.disposition} />
+              </div>
+            )}
+            {strategy.outcome.remedy && (
+              <div className="text-sm flex items-center">
+                <span className="font-medium">Remedy: </span>
+                <span className="text-black/60">{strategy.outcome.remedy}</span>
+                {strategy.outcome?.paragraphs?.remedy && strategy.outcome.paragraphs.remedy.length > 0 && (
+                  <CitationButton paragraphs={strategy.outcome.paragraphs.remedy} />
+                )}
+              </div>
+            )}
+            {strategy.outcome.costs && (
+              <div className="text-sm flex items-center">
+                <span className="font-medium">Costs: </span>
+                <span className="text-black/60">{strategy.outcome.costs}</span>
+                {strategy.outcome?.paragraphs?.costs && strategy.outcome.paragraphs.costs.length > 0 && (
+                  <CitationButton paragraphs={strategy.outcome.paragraphs.costs} />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Core Details Grid */}
       {(classification?.proceeding || classification?.monetaryValue) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -176,57 +227,6 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
                     </div>
                   )}
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Outcome Section */}
-      {strategy?.outcome && (
-        <div className="p-6 border border-black/10 bg-emerald-50/50 hover:bg-emerald-50/80 transition-colors">
-          <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
-            <Gavel className="w-4 h-4" />
-            Outcome
-          </h4>
-          <div className="space-y-4">
-            {strategy.outcome.summary && (
-              <Badge variant="outline" className="rounded-none bg-black text-white border-0">
-                {strategy.outcome.summary}
-              </Badge>
-            )}
-            {(strategy.outcome.disposition || []).length > 0 && (
-              <ul className="grid gap-3">
-                {(strategy.outcome.disposition || []).map((point, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <Scale className="w-4 h-4 text-black/40 mt-1" />
-                    <span className="text-sm text-black/60">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {strategy.outcome?.paragraphs?.disposition && strategy.outcome.paragraphs.disposition.length > 0 && (
-              <div className="text-sm flex items-center">
-                <span className="font-medium">Disposition:</span>
-                <CitationButton paragraphs={strategy.outcome.paragraphs.disposition} />
-              </div>
-            )}
-            {strategy.outcome.remedy && (
-              <div className="text-sm flex items-center">
-                <span className="font-medium">Remedy: </span>
-                <span className="text-black/60">{strategy.outcome.remedy}</span>
-                {strategy.outcome?.paragraphs?.remedy && strategy.outcome.paragraphs.remedy.length > 0 && (
-                  <CitationButton paragraphs={strategy.outcome.paragraphs.remedy} />
-                )}
-              </div>
-            )}
-            {strategy.outcome.costs && (
-              <div className="text-sm flex items-center">
-                <span className="font-medium">Costs: </span>
-                <span className="text-black/60">{strategy.outcome.costs}</span>
-                {strategy.outcome?.paragraphs?.costs && strategy.outcome.paragraphs.costs.length > 0 && (
-                  <CitationButton paragraphs={strategy.outcome.paragraphs.costs} />
-                )}
               </div>
             )}
           </div>

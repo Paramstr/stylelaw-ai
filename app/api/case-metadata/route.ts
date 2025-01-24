@@ -139,6 +139,9 @@ export async function POST(request: NextRequest) {
 
     const metadata = await claudeResponse.json();
 
+    // Add the pdfFile field to metadata
+    metadata.pdfFile = normalizedFilename;
+
     console.log('Metadata extracted successfully');
 
     // 4. Store the extracted metadata in Supabase
