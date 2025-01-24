@@ -1,0 +1,210 @@
+{
+  "pdfFile": "[2024]_NZFC_6201_TW_v_SD.pdf",
+  "coreInfo": {
+    "citation": "[2024] NZFC 6201",
+    "title": "TW v SD",
+    "court": "Family Court",
+    "jurisdiction": "New Zealand",
+    "judgmentDate": "20 May 2024",
+    "hearingDates": ["29 April 2024", "30 April 2024", "1 May 2024", "2 May 2024", "3 May 2024"],
+    "fileNumber": "FAM-2021-009-000755",
+    "status": "Decided"
+  },
+  "aiSummary": "Property relationship case concerning division of property between same-sex partners. Key issues involved whether property was held on resulting trust for one partner's parents and whether extraordinary circumstances justified unequal division under s13 PRA. Court rejected resulting trust claim but ordered 80/20 division based on financial contributions and cultural context. Significant for treatment of parental gifts in cultural context and application of s13 extraordinary circumstances test.",
+  "authorityStatus": {
+    "type": "Regular",
+    "area": "Family Law - Property (Relationships) Act",
+    "impact": "Application of s13 extraordinary circumstances test in context of cultural gifting"
+  },
+  "participants": {
+    "bench": [{
+      "name": "Judge P W Shearer",
+      "role": "Family Court Judge",
+      "isPrimary": true
+    }],
+    "counsel": [
+      {
+        "name": "S Marsden and R Van Eekelen",
+        "party": "Applicant"
+      },
+      {
+        "name": "Y Park",
+        "party": "Respondent"
+      },
+      {
+        "name": "A Brown and S Zhu",
+        "party": "Interested Parties"
+      }
+    ],
+    "parties": {
+      "applicants": ["TW"],
+      "respondents": ["SD"],
+      "interventions": ["HD", "LZ"]
+    }
+  },
+  "classification": {
+    "areasOfLaw": ["Family Law", "Property Law"],
+    "subAreas": ["Property (Relationships) Act 1976", "Resulting Trusts"],
+    "proceeding": {
+      "type": "Civil",
+      "level": "First Instance",
+      "nature": "Property Division"
+    }
+  },
+  "strategy": {
+    "keyIssues": [{
+      "issue": "Whether property held on resulting trust",
+      "resolution": "No resulting trust - presumption of advancement applies",
+      "significance": "Critical determination affecting property status",
+      "paragraphs": {
+        "issue": [7, 88, 89],
+        "resolution": [102, 103, 104],
+        "reasoning": [131, 132, 133, 134]
+      }
+    }, {
+      "issue": "Whether extraordinary circumstances justify unequal division",
+      "resolution": "Yes - 80/20 division ordered",
+      "significance": "Major impact on final property division",
+      "paragraphs": {
+        "issue": [7],
+        "resolution": [147, 148],
+        "reasoning": [142, 143, 144, 145, 146]
+      }
+    }],
+    "outcome": {
+      "summary": "Property to be divided 80% to SD and 20% to TW",
+      "disposition": [
+        "Property declared relationship property",
+        "Section 13 extraordinary circumstances found",
+        "80/20 division ordered"
+      ],
+      "costs": "Reserved with provisional view costs lie where they fall",
+      "paragraphs": {
+        "disposition": [162],
+        "costs": [160, 161]
+      }
+    },
+    "arguments": [{
+      "party": "TW",
+      "mainArguments": [{
+        "argument": "Property is relationship property not held on trust",
+        "paragraphs": [38, 39, 40]
+      }],
+      "successfulPoints": [{
+        "point": "Rejection of resulting trust claim",
+        "paragraphs": [104]
+      }],
+      "failedPoints": [{
+        "point": "Equal sharing claim",
+        "paragraphs": [147, 148]
+      }]
+    }, {
+      "party": "SD",
+      "mainArguments": [{
+        "argument": "Property held on resulting trust for parents",
+        "paragraphs": [100, 101]
+      }],
+      "successfulPoints": [{
+        "point": "Unequal division under s13",
+        "paragraphs": [147, 148]
+      }],
+      "failedPoints": [{
+        "point": "Resulting trust claim",
+        "paragraphs": [104]
+      }]
+    }],
+    "reasoning": {
+      "keyPrinciples": [{
+        "principle": "Presumption of advancement applies to parental gifts",
+        "paragraphs": [94, 95, 96]
+      }],
+      "factorsConsidered": [{
+        "factor": "Disparity in financial contributions",
+        "paragraphs": [142, 143, 144]
+      }, {
+        "factor": "Cultural context of parental support",
+        "paragraphs": [95, 96, 97]
+      }]
+    }
+  },
+  "authorities": {
+    "legislation": [{
+      "title": "Property (Relationships) Act 1976",
+      "provisions": ["Section 13", "Section 18B"],
+      "purpose": "Division of relationship property",
+      "treatment": "Applied",
+      "impact": "Primary legislation governing property division",
+      "paragraphs": [123, 124, 125]
+    }],
+    "cases": [{
+      "citation": "Martin v Martin [1979] 1 NZLR 97",
+      "purpose": "Guidance on extraordinary circumstances test",
+      "treatment": "Applied",
+      "principle": "High threshold for extraordinary circumstances",
+      "paragraphs": [125]
+    }],
+    "keyPassages": [{
+      "text": "Extraordinary circumstances that make equal sharing of property or money under section 11 repugnant to justice",
+      "paragraph": 124,
+      "topic": "Section 13 test",
+      "significance": "Core test discussed"
+    }]
+  },
+  "history": {
+    "procedural": [{
+      "date": "21 May 2021",
+      "event": "Proceedings filed",
+      "outcome": "Case commenced",
+      "paragraphs": [5]
+    }],
+    "related": [{
+      "citation": "Not applicable",
+      "relationship": "No related proceedings",
+      "status": "Not applicable"
+    }],
+    "subsequent": [{
+      "citation": "Not applicable",
+      "treatment": "Not applicable",
+      "impact": "Too recent for subsequent treatment"
+    }]
+  },
+  "practice": {
+    "significance": {
+      "precedentValue": "Application of s13 in context of cultural gifting and parent contributions",
+      "implications": [
+        "Treatment of parental gifts in cultural context",
+        "Weighting of monetary vs non-monetary contributions in shorter relationships"
+      ],
+      "paragraphs": [141, 142, 143, 144, 145, 146]
+    },
+    "applicability": {
+      "keyFactors": [{
+        "factor": "Significant parental financial contributions",
+        "paragraphs": [38, 39, 40]
+      }],
+      "limitations": [{
+        "limitation": "Specific cultural context may limit broader application",
+        "paragraphs": [95, 96]
+      }],
+      "scope": [{
+        "application": "Property division cases involving cultural elements",
+        "paragraphs": [141, 142]
+      }]
+    },
+    "guidance": {
+      "strategic": [{
+        "point": "Consider cultural context in property division",
+        "paragraphs": [95, 96, 97]
+      }],
+      "procedural": [{
+        "point": "Need for clear documentation of property ownership intentions",
+        "paragraphs": [111, 112]
+      }],
+      "evidence": [{
+        "point": "Importance of contemporaneous evidence of intentions",
+        "paragraphs": [102, 103]
+      }]
+    }
+  }
+}
+

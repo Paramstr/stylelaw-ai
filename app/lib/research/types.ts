@@ -1,36 +1,26 @@
+import type { CaseData } from '@/../types/caseData'
 
-export interface CaseMetadata {
-  // Basic case information
-  title: string;
-  citation: string;
-  date: string;
-  court: string;
-  
-  // Parties involved
-  parties: {
-    applicant: string;
-    respondent: string;
+export interface SearchResult {
+  id: string;
+  score: number;
+  metadata: CaseData;
+  chunk: {
+    content: string;
+    filename: string;
+    chunkIndex: number;
   };
-  
-  // Case details
-  judges: string[];
-  lawyers: {
-    applicant: string[];
-    respondent: string[];
+  themes?: Array<{
+    theme_name: string;
+    strength: number;
+  }>;
+  relevance?: {
+    score: number;
+    reason: string;
   };
-  
-  // Case subject matter
-  subjectMatter: string[];
-  keywords: string[];
-  
-  // Document info
-  filename: string;
-  uploadedAt: string;
-  lastUpdated: string;
 }
 
 export interface ProcessedCase {
-  metadata: CaseMetadata;
+  metadata: CaseData;
   chunks: ProcessedChunk[];
 }
 

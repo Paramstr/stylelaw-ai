@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button"
 import { Sparkles, HelpCircle, ChevronDown } from 'lucide-react'
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useState } from 'react'
+import { cn } from "@/lib/utils"
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -60,8 +61,10 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
-                  variant="ghost" 
-                  className="flex items-center gap-3 text-[#6B7280] hover:bg-transparent h-12 px-6 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                  variant={'ghost' as const}
+                  className={cn(
+                    "flex items-center gap-3 text-[#6B7280] hover:bg-transparent h-12 px-6 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                  )}
                 >
                   <Sparkles 
                     className={`w-4 h-4 transition-all duration-300 ${
@@ -113,4 +116,3 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     </div>
   )
 }
-

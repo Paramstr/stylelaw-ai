@@ -1,8 +1,11 @@
+'use client'
+
 import { Panel, PanelHeader, PanelSection } from './ui/Panel'
 import { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
+import type { SearchResult } from '@/lib/research/types'
 
 interface Theme {
   theme_name: string
@@ -12,18 +15,6 @@ interface Theme {
 interface Relevance {
   score: number
   reason: string
-}
-
-interface SearchResult {
-  id: string
-  score: number
-  metadata: {
-    content: string
-    filename: string
-    chunkIndex: number
-  }
-  themes?: Theme[]
-  relevance?: Relevance
 }
 
 interface SearchResultsProps {
@@ -75,6 +66,49 @@ function RelevanceScore({ score, reason }: Relevance) {
   )
 }
 
+export function SearchResultsSkeleton() {
+  return (
+    <div className="w-full max-w-4xl mx-auto mt-8">
+      <div className="text-base font-medium text-gray-900 pb-2">Search Results</div>
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="border border-black bg-white animate-pulse">
+            <div className="border-b border-black">
+              <div className="px-4 py-3">
+                <div className="h-6 bg-gray-200 w-48" />
+              </div>
+            </div>
+            <div className="grid grid-cols-[1fr_auto] border-b border-black">
+              <div className="px-4 py-3 border-r border-black">
+                <div className="space-y-2">
+                  {[1, 2, 3].map((j) => (
+                    <div key={j} className="flex items-center">
+                      <div className="w-10 h-6 bg-gray-200 mr-4" />
+                      <div className="h-4 bg-gray-200 w-48" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="w-64 px-4 py-3 bg-gray-50">
+                <div className="space-y-2">
+                  <div className="h-6 bg-gray-200 w-24" />
+                  <div className="h-4 bg-gray-200 w-32" />
+                </div>
+              </div>
+            </div>
+            <div className="px-4 py-3">
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 w-full" />
+                <div className="h-4 bg-gray-200 w-3/4" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function SearchResults({ results, isLoading, searchQuery = '' }: SearchResultsProps) {
   const [expandedResults, setExpandedResults] = useState<Set<string>>(new Set());
   const [resultsWithThemes, setResultsWithThemes] = useState<SearchResult[]>([]);
@@ -96,7 +130,7 @@ export function SearchResults({ results, isLoading, searchQuery = '' }: SearchRe
           const response = await fetch('/api/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: result.metadata.content })
+            body: JSON.stringify({ text: result.chunk.content })
           });
           
           if (!response.ok) throw new Error('Failed to analyze themes');
@@ -164,7 +198,6 @@ export function SearchResults({ results, isLoading, searchQuery = '' }: SearchRe
       <div className="space-y-4">
         {resultsWithThemes.map((result) => {
           const isExpanded = expandedResults.has(result.id);
-          const highlightedContent = highlightText(result.metadata.content, searchQuery);
           const isLoadingThemes = loadingThemes.has(result.id);
 
           return (
@@ -172,9 +205,9 @@ export function SearchResults({ results, isLoading, searchQuery = '' }: SearchRe
               <div className="border-b border-black">
                 <div className="px-4 py-3">
                   <div className="flex items-center gap-4">
-                    <span className="font-medium font-serif">{result.metadata.filename}</span>
+                    <span className="font-medium font-serif">{result.chunk.filename}</span>
                     <Badge className="text-xs border border-black bg-white text-black font-medium">
-                      Chunk {result.metadata.chunkIndex + 1}
+                      Chunk {result.chunk.chunkIndex + 1}
                     </Badge>
                   </div>
                 </div>
@@ -217,7 +250,7 @@ export function SearchResults({ results, isLoading, searchQuery = '' }: SearchRe
               <div className="px-4 py-3">
                 <div 
                   className={cn("text-sm text-gray-700", !isExpanded && "line-clamp-2")}
-                  dangerouslySetInnerHTML={{ __html: highlightedContent }} 
+                  dangerouslySetInnerHTML={{ __html: highlightText(result.chunk.content, searchQuery) }} 
                 />
                 <button
                   onClick={() => toggleExpand(result.id)}

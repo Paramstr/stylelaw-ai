@@ -19,10 +19,10 @@ import { format } from "date-fns"
 import { CalendarIcon, Clock, Globe, Building2, FileText, Scale, ChevronDown, MapPin } from 'lucide-react'
 import { useState, useRef } from "react"
 import { useOnClickOutside } from 'usehooks-ts'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 interface FilterSectionProps {
   className?: string
-  onResultsCountChange?: (count: number) => void
 }
 
 type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year' | 'custom';
@@ -30,7 +30,13 @@ type Category = 'family-law' | 'court-of-appeal' | 'district-court' | 'high-cour
 type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
 type ResultsCount = 10 | 20 | 50 | 100;
 
-export function FilterSection({ className, onResultsCountChange }: FilterSectionProps) {
+export function FilterSection({ className }: FilterSectionProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  const currentCount = parseInt(searchParams.get('count') || '10', 10)
+  const currentQuery = searchParams.get('q') || ''
+  
   const [date, setDate] = useState<Date>()
   const [timeRange, setTimeRange] = useState<TimeRange>('any')
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(['family-law'])
@@ -99,7 +105,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
 
   const handleResultsCountChange = (count: ResultsCount) => {
     setResultsCount(count);
-    onResultsCountChange?.(count);
+    handleCountChange(count);
   };
 
   const removeFilter = (type: 'category' | 'time' | 'region', value?: Category) => {
@@ -111,6 +117,15 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
     } else if (type === 'region') {
       setSelectedRegion('new-zealand')
     }
+  }
+
+  const handleCountChange = (count: number) => {
+    // Create new URL with updated count
+    const params = new URLSearchParams(searchParams)
+    params.set('count', count.toString())
+    
+    // Navigate to new URL
+    router.push(`/research?${params.toString()}`)
   }
 
   return (
