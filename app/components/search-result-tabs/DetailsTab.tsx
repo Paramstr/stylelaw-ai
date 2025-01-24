@@ -1,6 +1,6 @@
 import { Scale, FileText, Users, Gavel } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { CitationButton } from "./citation-button"
+import { CitationButton } from "../citation-button"
 import type { CaseData } from "@/../types/caseData"
 
 interface DetailsTabProps {
@@ -81,8 +81,11 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Proceeding Details */}
           {classification?.proceeding && (
-            <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
-              <h4 className="text-sm font-medium mb-4">Proceeding Details</h4>
+            <div className="p-6">
+              <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Proceeding Details
+              </h4>
               <dl className="space-y-3">
                 {classification.proceeding.type && (
                   <div className="flex items-center justify-between gap-4">
@@ -163,7 +166,7 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
 
       {/* Participants Section */}
       {(participants?.bench || []).length > 0 && (
-        <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+        <div className="p-6">
           <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
             <Users className="w-4 h-4" />
             Participants

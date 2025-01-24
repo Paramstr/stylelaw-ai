@@ -1,5 +1,5 @@
 import { ArrowRight, Check, AlertCircle } from "lucide-react"
-import { CitationButton } from "./citation-button"
+import { CitationButton } from "../citation-button"
 import type { CaseData } from "@/../types/caseData"
 
 interface SignificanceTabProps {
@@ -11,7 +11,7 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
   if (!practice?.significance) {
     return (
       <div className="p-8">
-        <h4 className="text-lg font-light mb-6">Significance and Applicability</h4>
+        <h4 className="text-xl font-medium mb-6">Significance and Applicability</h4>
         <div className="text-sm text-black/60">No significance data available.</div>
       </div>
     );
@@ -19,9 +19,9 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
 
   return (
     <div className="p-8 h-full overflow-y-auto">
-      <h4 className="text-lg font-light mb-6">Significance and Applicability</h4>
+      <h4 className="text-xl font-medium mb-6">Significance and Applicability</h4>
       <div className="space-y-6">
-        <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+        <div className="p-6">
           <div className="space-y-6">
             <div>
               <h5 className="text-sm font-medium mb-4 flex items-center gap-2">
@@ -51,7 +51,7 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {practice.applicability?.keyFactors && practice.applicability.keyFactors.length > 0 && (
-            <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+            <div className="p-6">
               <h5 className="text-sm font-medium mb-4">Key Factors</h5>
               <ul className="space-y-3">
                 {practice.applicability.keyFactors.map((factor, index) => {
@@ -75,7 +75,7 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
           )}
 
           {practice.applicability?.limitations && (
-            <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+            <div className="p-6">
               <h5 className="text-sm font-medium mb-4">Limitations</h5>
               <ul className="space-y-3">
                 {practice.applicability.limitations.map((limitation, index) => (

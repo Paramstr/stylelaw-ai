@@ -1,6 +1,6 @@
 import { BookOpen, Check, XCircle, ArrowRight, AlertCircle } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-import { CitationButton } from "./citation-button"
+import { CitationButton } from "../citation-button"
 import type { CaseData } from "@/../types/caseData"
 
 interface IssuesTabProps {
@@ -12,7 +12,7 @@ export function IssuesTab({ strategy, onParagraphClick }: IssuesTabProps) {
   if (!strategy?.keyIssues?.length) {
     return (
       <div className="p-8">
-        <h4 className="text-lg font-light mb-6 flex items-center gap-2">
+        <h4 className="text-xl font-medium mb-6 flex items-center gap-2">
           <BookOpen className="w-5 h-5" />
           Key Issues
         </h4>
@@ -23,7 +23,7 @@ export function IssuesTab({ strategy, onParagraphClick }: IssuesTabProps) {
 
   return (
     <div className="p-8 h-full overflow-y-auto">
-      <h4 className="text-lg font-light mb-6 flex items-center gap-2">
+      <h4 className="text-xl font-medium mb-6 flex items-center gap-2">
         <BookOpen className="w-5 h-5" />
         Key Issues
       </h4>
@@ -32,7 +32,7 @@ export function IssuesTab({ strategy, onParagraphClick }: IssuesTabProps) {
           if (!issue) return null;
           
           return (
-            <div key={index} className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+            <div key={index} className="p-6">
               <h5 className="text-sm font-medium mb-4 flex items-center gap-2">
                 <span className="flex-1">{issue.issue}</span>
                 {issue.paragraphs?.issue && <CitationButton paragraphs={issue.paragraphs.issue} onParagraphClick={onParagraphClick} />}

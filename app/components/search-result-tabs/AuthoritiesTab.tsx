@@ -1,5 +1,5 @@
 import { Book, ArrowRight } from "lucide-react"
-import { CitationButton } from "./citation-button"
+import { CitationButton } from "../citation-button"
 import type { CaseData } from "@/../types/caseData"
 
 interface AuthoritiesTabProps {
@@ -11,7 +11,7 @@ export function AuthoritiesTab({ authorities, onParagraphClick }: AuthoritiesTab
   if (!(authorities?.legislation || []).length && !(authorities?.cases || []).length && !(authorities?.keyPassages || []).length) {
     return (
       <div className="p-8">
-        <h4 className="text-lg font-light mb-6 flex items-center gap-2">
+        <h4 className="text-xl font-medium mb-6 flex items-center gap-2">
           <Book className="w-5 h-5" />
           Authorities and References
         </h4>
@@ -22,7 +22,7 @@ export function AuthoritiesTab({ authorities, onParagraphClick }: AuthoritiesTab
 
   return (
     <div className="p-8 h-full overflow-y-auto">
-      <h4 className="text-lg font-light mb-6 flex items-center gap-2">
+      <h4 className="text-xl font-medium mb-6 flex items-center gap-2">
         <Book className="w-5 h-5" />
         Authorities and References
       </h4>
@@ -35,7 +35,7 @@ export function AuthoritiesTab({ authorities, onParagraphClick }: AuthoritiesTab
               {(authorities?.legislation || []).map((legislation, index) => {
                 if (!legislation) return null;
                 return (
-                  <div key={index} className="bg-white border border-black/10 p-6">
+                  <div key={index} className="p-6">
                     <div className="flex items-start gap-3">
                       <ArrowRight className="w-4 h-4 text-black/40 mt-1 shrink-0" />
                       <div className="flex-1 space-y-4">
@@ -82,7 +82,7 @@ export function AuthoritiesTab({ authorities, onParagraphClick }: AuthoritiesTab
               {(authorities?.cases || []).map((caseAuthority, index) => {
                 if (!caseAuthority) return null;
                 return (
-                  <div key={index} className="bg-white border border-black/10 p-6">
+                  <div key={index} className="p-6">
                     <div className="flex items-start gap-3">
                       <ArrowRight className="w-4 h-4 text-black/40 mt-1 shrink-0" />
                       <div className="flex-1 space-y-4">
@@ -123,7 +123,7 @@ export function AuthoritiesTab({ authorities, onParagraphClick }: AuthoritiesTab
               {(authorities?.keyPassages || []).map((passage, index) => {
                 if (!passage) return null;
                 return (
-                  <div key={index} className="bg-white border border-black/10 p-6">
+                  <div key={index} className="p-6">
                     <div className="flex items-start gap-3">
                       <ArrowRight className="w-4 h-4 text-black/40 mt-1 shrink-0" />
                       <div className="flex-1 space-y-4">

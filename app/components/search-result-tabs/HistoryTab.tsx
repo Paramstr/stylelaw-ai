@@ -1,5 +1,5 @@
 import { History, ArrowRight } from "lucide-react"
-import { CitationButton } from "./citation-button"
+import { CitationButton } from "../citation-button"
 import type { CaseData } from "@/../types/caseData"
 
 interface HistoryTabProps {
@@ -11,7 +11,7 @@ export function HistoryTab({ history, onParagraphClick }: HistoryTabProps) {
   if (!history?.procedural?.length && !history?.related?.length && !history?.subsequent?.length) {
     return (
       <div className="p-8">
-        <h4 className="text-lg font-light mb-6 flex items-center gap-2">
+        <h4 className="text-xl font-medium mb-6 flex items-center gap-2">
           <History className="w-5 h-5" />
           Case History
         </h4>
@@ -22,13 +22,13 @@ export function HistoryTab({ history, onParagraphClick }: HistoryTabProps) {
 
   return (
     <div className="p-8 h-full overflow-y-auto">
-      <h4 className="text-lg font-light mb-6 flex items-center gap-2">
+      <h4 className="text-xl font-medium mb-6 flex items-center gap-2">
         <History className="w-5 h-5" />
         Case History
       </h4>
       <div className="space-y-6">
         {history.procedural && history.procedural.length > 0 && (
-          <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+          <div className="p-6">
             <h5 className="text-sm font-medium mb-4">Procedural History</h5>
             <ul className="space-y-4">
               {history.procedural.map((event, index) => {
@@ -55,7 +55,7 @@ export function HistoryTab({ history, onParagraphClick }: HistoryTabProps) {
         )}
 
         {history.related && history.related.length > 0 && (
-          <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+          <div className="p-6">
             <h5 className="text-sm font-medium mb-4">Related Cases</h5>
             <ul className="space-y-4">
               {history.related.map((relatedCase, index) => {
@@ -76,7 +76,7 @@ export function HistoryTab({ history, onParagraphClick }: HistoryTabProps) {
         )}
 
         {history.subsequent && history.subsequent.length > 0 && (
-          <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
+          <div className="p-6">
             <h5 className="text-sm font-medium mb-4">Subsequent Treatment</h5>
             <ul className="space-y-4">
               {history.subsequent.map((subsequentCase, index) => {
