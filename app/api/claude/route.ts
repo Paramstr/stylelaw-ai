@@ -1,6 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from "@anthropic-ai/sdk";
 
+// Add retry utility
+async function retryWithBackoff<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error: any) {
+      if (attempt === maxRetries - 1) throw error;
+      
+      // Check if it's an overloaded error
+      const isOverloaded = error?.error?.error?.type === 'overloaded_error';
+      if (!isOverloaded) throw error;
+
+      // Calculate delay with exponential backoff
+      const delay = baseDelay * Math.pow(2, attempt);
+      console.log(`Claude API overloaded. Retrying in ${delay}ms... (Attempt ${attempt + 1}/${maxRetries})`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw new Error('Max retries reached');
+}
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
@@ -149,19 +174,34 @@ Text to summarize:`;
     }
 
     console.log('Calling Claude API with task:', task.type);
-    // Call Claude API
-    const completion = await anthropic.messages.create({
-      model: "claude-3-sonnet-20240229",
-      max_tokens: 4000,
-      temperature: 0.1,
-      system: systemPrompt || "You are a legal expert AI assistant. Be precise and accurate in your analysis.",
-      messages: [
-        {
-          role: "user",
-          content: prompt + "\n\n" + task.content,
-        }
-      ]
+    
+    const completion = await retryWithBackoff(async () => {
+      return await anthropic.messages.create({
+        model: "claude-3-5-sonnet-latest",
+        max_tokens: 4000,
+        system: systemPrompt || "You are a legal expert AI assistant. Be precise and accurate in your analysis.",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: 'document',
+                source: {
+                  type: 'base64',
+                  media_type: 'application/pdf',
+                  data: task.content
+                }
+              },
+              {
+                type: 'text',
+                text: prompt
+              }
+            ]
+          }
+        ]
+      });
     });
+    
 
     console.log('Received response from Claude:', {
       contentLength: 'text' in completion.content[0] ? completion.content[0].text.length : 0,

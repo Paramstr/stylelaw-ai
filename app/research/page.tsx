@@ -25,7 +25,7 @@ export default function ResearchPage() {
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState('')
   const [currentQuery, setCurrentQuery] = useState('')
-  const [resultsCount, setResultsCount] = useState(10)
+  const [resultsCount, setResultsCount] = useState(1)
 
   // Fetch metadata for a single case
   const fetchCaseMetadata = async (caseId: string): Promise<CaseData> => {
@@ -33,7 +33,16 @@ export default function ResearchPage() {
     console.log('Fetching metadata for case ID:', caseId);
     const filename = caseId.split('-')[0];
     
-    const response = await fetch(`/api/case-metadata?filename=${filename}`);
+    const response = await fetch('/api/case-metadata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        filename
+      })
+    });
+
     if (!response.ok) {
       throw new Error(`Failed to fetch metadata for case ${filename}`);
     }

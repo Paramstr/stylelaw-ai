@@ -31,26 +31,18 @@ interface CaseSearchResultProps {
   caseData: CaseData
 }
 
-export default function CaseSearchResult({ caseData }: CaseSearchResultProps) {
+const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [hoveredSection, setHoveredSection] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("details")
 
   const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab)
   }, [])
 
-  const {
-    coreInfo,
-    aiSummary,
-    authorityStatus,
-    participants,
-    classification,
-    strategy,
-    practice,
-    history,
-    authorities,
-  } = caseData
+  // Early return if required data is missing
+  if (!caseData?.coreInfo?.citation || !caseData?.classification) {
+    return null
+  }
 
   return (
     <Card className="bg-white border border-black/10 rounded-none border-l-[3px] border-l-black">
@@ -60,27 +52,39 @@ export default function CaseSearchResult({ caseData }: CaseSearchResultProps) {
           <div className="flex justify-between items-start mb-6">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <motion.div className="text-sm font-mono">{coreInfo.citation}</motion.div>
-                <Badge variant="outline" className="rounded-none border-0 bg-black text-white">
-                  {coreInfo.status}
-                </Badge>
+                <motion.div className="text-sm font-mono">{caseData.coreInfo.citation}</motion.div>
+                {caseData.coreInfo.status && (
+                  <Badge variant="outline" className="rounded-none border-0 bg-black text-white">
+                    {caseData.coreInfo.status}
+                  </Badge>
+                )}
               </div>
-              <motion.h3 className="text-2xl font-light tracking-tight">{coreInfo.shortTitle}</motion.h3>
-              <motion.p className="text-sm text-black/60 max-w-2xl leading-relaxed">{coreInfo.title}</motion.p>
+              {caseData.coreInfo.shortTitle && (
+                <motion.h3 className="text-2xl font-serif tracking-tight">{caseData.coreInfo.shortTitle}</motion.h3>
+              )}
+              {caseData.coreInfo.title && (
+                <motion.p className="text-sm font-serif text-black/60 max-w-2xl leading-relaxed">
+                  {caseData.coreInfo.title}
+                </motion.p>
+              )}
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-sm text-black/60 mb-6">
-            <div className="flex items-center gap-2">
-              <Scale className="h-4 w-4" />
-              <span>{coreInfo.court}</span>
-            </div>
-            <span>{coreInfo.jurisdiction}</span>
-            <span>{new Date(coreInfo.judgmentDate).toLocaleDateString()}</span>
+          <div className="flex flex-wrap items-center gap-6 text-sm font-serif text-black/60 mb-6">
+            {caseData.coreInfo.court && (
+              <div className="flex items-center gap-2">
+                <Scale className="h-4 w-4" />
+                <span>{caseData.coreInfo.court}</span>
+              </div>
+            )}
+            {caseData.coreInfo.jurisdiction && <span>{caseData.coreInfo.jurisdiction}</span>}
+            {caseData.coreInfo.judgmentDate && (
+              <span>{new Date(caseData.coreInfo.judgmentDate).toLocaleDateString()}</span>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {classification.areasOfLaw.map((area: string) => (
+            {(caseData.classification.areasOfLaw || []).map((area: string) => (
               <Badge
                 key={area}
                 variant="secondary"
@@ -89,7 +93,7 @@ export default function CaseSearchResult({ caseData }: CaseSearchResultProps) {
                 {area}
               </Badge>
             ))}
-            {classification.subAreas.map((area: string) => (
+            {(caseData.classification.subAreas || []).map((area: string) => (
               <Badge
                 key={area}
                 variant="outline"
@@ -100,10 +104,12 @@ export default function CaseSearchResult({ caseData }: CaseSearchResultProps) {
             ))}
           </div>
 
-          <div className="bg-[#2F4F4F] p-6 rounded-sm mt-6 mb-6">
-            <h4 className="text-sm font-medium mb-2 text-white">AI Summary</h4>
-            <p className="text-sm text-white/95">{aiSummary}</p>
-          </div>
+          {caseData.aiSummary && (
+            <div className="bg-[#2F4F4F] p-6 rounded-sm mt-6 mb-6">
+              <h4 className="text-sm font-medium mb-2 text-white">AI Summary</h4>
+              <p className="text-sm font-serif text-white/95">{caseData.aiSummary}</p>
+            </div>
+          )}
         </div>
 
         <AnimatePresence>
@@ -142,20 +148,20 @@ export default function CaseSearchResult({ caseData }: CaseSearchResultProps) {
                 >
                   {activeTab === "details" && (
                     <DetailsTab
-                      classification={classification}
-                      authorityStatus={authorityStatus}
-                      participants={participants}
-                      strategy={strategy}
+                      classification={caseData.classification}
+                      authorityStatus={caseData.authorityStatus}
+                      participants={caseData.participants}
+                      strategy={caseData.strategy}
                     />
                   )}
 
-                  {activeTab === "issues" && <IssuesTab strategy={strategy} />}
+                  {activeTab === "issues" && <IssuesTab strategy={caseData.strategy} />}
 
-                  {activeTab === "significance" && <SignificanceTab practice={practice} />}
+                  {activeTab === "significance" && <SignificanceTab practice={caseData.practice} />}
 
-                  {activeTab === "history" && <HistoryTab history={history} />}
+                  {activeTab === "history" && <HistoryTab history={caseData.history} />}
 
-                  {activeTab === "authorities" && <AuthoritiesTab authorities={authorities} />}
+                  {activeTab === "authorities" && <AuthoritiesTab authorities={caseData.authorities} />}
                 </motion.div>
               </AnimatePresence>
             </motion.div>
@@ -176,4 +182,6 @@ export default function CaseSearchResult({ caseData }: CaseSearchResultProps) {
     </Card>
   )
 }
+
+export default CaseSearchResult
 

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { extractMetadataWithClaude } from '@/lib/research/claude-metadata-extractor';
 import { createClient } from '@supabase/supabase-js';
 import path from 'path';
+// At the top of case-metadata/route.ts
+import { POST as claudeApiHandler } from '@/api/claude/route';  // Adjust the import path based on your file structure
 
 // Constants
 const BUCKET_NAME = 'Law-Cases';
@@ -28,10 +30,17 @@ function getStorageFilename(filename: string): string {
   return filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
 }
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   console.log('Metadata API route called');
-  const searchParams = request.nextUrl.searchParams;
-  const filename = searchParams.get('filename');
+  
+  const body = await request.json();
+  const filename = body.filename;
+
+
+  // Validate environment variables
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Missing required environment variables');
+  }
 
   if (!filename) {
     console.error('No filename provided');
@@ -42,6 +51,7 @@ export async function GET(request: NextRequest) {
   }
 
   console.log('Processing request for filename:', filename);
+
 
   if (!isValidFilename(filename)) {
     console.error('Invalid filename format:', filename);
@@ -63,6 +73,7 @@ export async function GET(request: NextRequest) {
       .eq('filename', normalizedFilename)
       .single();
 
+    console.log('Existing metadata:', existingMetadata);
     if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "not found"
       console.error('Error fetching from Supabase:', fetchError);
       throw fetchError;
@@ -95,7 +106,39 @@ export async function GET(request: NextRequest) {
 
     // 3. Extract metadata using Claude
     console.log('Extracting metadata using Claude...');
-    const extractedMetadata = await extractMetadataWithClaude(pdfData, normalizedFilename);
+
+    const arrayBuffer = await pdfData.arrayBuffer();
+    const pdfBase64 = Buffer.from(arrayBuffer).toString('base64');
+
+
+
+    // Convert PDF to text
+    console.log('PDF CHECKPOINT 1: extracted text');
+    
+
+    // Call Claude API route
+    // Replace the fetch call with direct handler invocation
+    const claudeResponse = await claudeApiHandler(
+      new NextRequest('http://localhost', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          task: {
+            type: 'extract_metadata',
+            content: pdfBase64,
+          }
+        })
+      })
+    );
+
+    if (!claudeResponse.ok) {
+      const errorData = await claudeResponse.json();
+      console.error('Claude API error:', errorData);
+      throw new Error(errorData.error || 'Claude API failed');
+    }
+
+    const metadata = await claudeResponse.json();
+
     console.log('Metadata extracted successfully');
 
     // 4. Store the extracted metadata in Supabase
@@ -104,7 +147,7 @@ export async function GET(request: NextRequest) {
       .from('case_metadata')
       .insert([{
         filename: normalizedFilename,
-        metadata: extractedMetadata,
+        metadata: metadata,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }]);
@@ -116,12 +159,23 @@ export async function GET(request: NextRequest) {
       console.log('Metadata stored successfully');
     }
 
-    return NextResponse.json(extractedMetadata);
+    return NextResponse.json(metadata);
   } catch (error) {
     console.error('Error in metadata pipeline:', error);
+    // Determine if it's a Claude overload error
+    const isOverloaded = error instanceof Error && 
+      error.message.includes('overloaded');
+    
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to retrieve or extract case metadata' },
-      { status: 500 }
+      { 
+        error: error instanceof Error ? error.message : 'Failed to retrieve or extract case metadata',
+        isOverloaded: isOverloaded,
+        retryAfter: isOverloaded ? 5000 : undefined // Suggest retry after 5 seconds if overloaded
+      },
+      { 
+        status: isOverloaded ? 503 : 500,
+        headers: isOverloaded ? { 'Retry-After': '5' } : undefined
+      }
     );
   }
 } 
