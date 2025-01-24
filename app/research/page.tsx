@@ -159,8 +159,8 @@ export default function ResearchPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavHeader title="DONNA | RESEARCH" />
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto">
+      <main className="flex-1 px-8 py-8">
+        <div className="w-full">
           <div className="w-full max-w-4xl mx-auto space-y-6 mt-12">
             <FilterSection onResultsCountChange={handleResultsCountChange} />
             <SearchBar onSearch={handleSearch} />
@@ -173,7 +173,7 @@ export default function ResearchPage() {
               <h2 className="text-base font-medium text-gray-500 mt-24 mb-4">
                 Showing {results.length} Results
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-6 w-full">
                 {results.map((result) => (
                   <CaseSearchResult
                     key={result.id}

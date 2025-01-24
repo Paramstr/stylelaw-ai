@@ -139,8 +139,9 @@ export async function POST(request: NextRequest) {
 
     const metadata = await claudeResponse.json();
 
-    // Add the pdfFile field to metadata
+    // Add the pdfFile field and pdfData to metadata
     metadata.pdfFile = normalizedFilename;
+    metadata.pdfBase64 = pdfBase64;  // Add the base64 encoded PDF data
 
     console.log('Metadata extracted successfully');
 

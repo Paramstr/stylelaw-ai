@@ -1,5 +1,6 @@
 export interface CaseData {
   pdfFile?: string
+  pdfBase64?: string
   coreInfo?: {
     citation?: string
     title?: string

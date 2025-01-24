@@ -8,9 +8,10 @@ interface DetailsTabProps {
   authorityStatus: CaseData["authorityStatus"]
   participants: CaseData["participants"]
   strategy: CaseData["strategy"]
+  onParagraphClick?: (paragraph: number) => void
 }
 
-export function DetailsTab({ classification, authorityStatus, participants, strategy }: DetailsTabProps) {
+export function DetailsTab({ classification, authorityStatus, participants, strategy, onParagraphClick }: DetailsTabProps) {
   // Show empty state if no data is available
   const hasData = classification || authorityStatus || participants || strategy
   if (!hasData) {
@@ -23,7 +24,7 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
   }
 
   return (
-    <div className="p-8 grid gap-8">
+    <div className="p-8 space-y-8 h-full overflow-y-auto">
       {/* Outcome Section */}
       {strategy?.outcome && (
         <div className="p-6 border border-black/10 bg-emerald-50/50 hover:bg-emerald-50/80 transition-colors">
@@ -41,33 +42,33 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
               <ul className="grid gap-3">
                 {(strategy.outcome.disposition || []).map((point, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <Scale className="w-4 h-4 text-black/40 mt-1" />
+                    <Scale className="w-4 h-4 text-black/40 mt-1 shrink-0" />
                     <span className="text-sm text-black/60">{point}</span>
                   </li>
                 ))}
               </ul>
             )}
             {strategy.outcome?.paragraphs?.disposition && strategy.outcome.paragraphs.disposition.length > 0 && (
-              <div className="text-sm flex items-center">
-                <span className="font-medium">Disposition:</span>
-                <CitationButton paragraphs={strategy.outcome.paragraphs.disposition} />
+              <div className="text-sm flex items-center gap-2">
+                <span className="font-medium shrink-0">Disposition:</span>
+                <CitationButton paragraphs={strategy.outcome.paragraphs.disposition} onParagraphClick={onParagraphClick} />
               </div>
             )}
             {strategy.outcome.remedy && (
-              <div className="text-sm flex items-center">
-                <span className="font-medium">Remedy: </span>
+              <div className="text-sm flex items-center gap-2">
+                <span className="font-medium shrink-0">Remedy:</span>
                 <span className="text-black/60">{strategy.outcome.remedy}</span>
                 {strategy.outcome?.paragraphs?.remedy && strategy.outcome.paragraphs.remedy.length > 0 && (
-                  <CitationButton paragraphs={strategy.outcome.paragraphs.remedy} />
+                  <CitationButton paragraphs={strategy.outcome.paragraphs.remedy} onParagraphClick={onParagraphClick} />
                 )}
               </div>
             )}
             {strategy.outcome.costs && (
-              <div className="text-sm flex items-center">
-                <span className="font-medium">Costs: </span>
+              <div className="text-sm flex items-center gap-2">
+                <span className="font-medium shrink-0">Costs:</span>
                 <span className="text-black/60">{strategy.outcome.costs}</span>
                 {strategy.outcome?.paragraphs?.costs && strategy.outcome.paragraphs.costs.length > 0 && (
-                  <CitationButton paragraphs={strategy.outcome.paragraphs.costs} />
+                  <CitationButton paragraphs={strategy.outcome.paragraphs.costs} onParagraphClick={onParagraphClick} />
                 )}
               </div>
             )}
@@ -77,28 +78,28 @@ export function DetailsTab({ classification, authorityStatus, participants, stra
 
       {/* Core Details Grid */}
       {(classification?.proceeding || classification?.monetaryValue) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Proceeding Details */}
           {classification?.proceeding && (
             <div className="p-6 border border-black/10 bg-[#FAFAFA] hover:bg-[#F5F5F5] transition-colors">
               <h4 className="text-sm font-medium mb-4">Proceeding Details</h4>
               <dl className="space-y-3">
                 {classification.proceeding.type && (
-                  <div className="flex justify-between">
-                    <dt className="text-sm text-black/40">Type</dt>
-                    <dd className="text-sm font-medium">{classification.proceeding.type}</dd>
+                  <div className="flex items-center justify-between gap-4">
+                    <dt className="text-sm text-black/40 shrink-0">Type</dt>
+                    <dd className="text-sm font-medium text-right">{classification.proceeding.type}</dd>
                   </div>
                 )}
                 {classification.proceeding.level && (
-                  <div className="flex justify-between">
-                    <dt className="text-sm text-black/40">Level</dt>
-                    <dd className="text-sm font-medium">{classification.proceeding.level}</dd>
+                  <div className="flex items-center justify-between gap-4">
+                    <dt className="text-sm text-black/40 shrink-0">Level</dt>
+                    <dd className="text-sm font-medium text-right">{classification.proceeding.level}</dd>
                   </div>
                 )}
                 {classification.proceeding.nature && (
-                  <div className="flex justify-between">
-                    <dt className="text-sm text-black/40">Nature</dt>
-                    <dd className="text-sm font-medium">{classification.proceeding.nature}</dd>
+                  <div className="flex items-center justify-between gap-4">
+                    <dt className="text-sm text-black/40 shrink-0">Nature</dt>
+                    <dd className="text-sm font-medium text-right">{classification.proceeding.nature}</dd>
                   </div>
                 )}
               </dl>

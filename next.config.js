@@ -1,16 +1,17 @@
-const path = require('path')
+//next.config.js
+const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+
+
   poweredByHeader: false,
   images: {
     domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com'],
   },
   webpack(config, { isServer }) {
-    if (!isServer) {
-      // Ensure that all imports of 'yjs' resolve to the same instance
-      config.resolve.alias['yjs'] = path.resolve(__dirname, '../../node_modules/yjs')
-    }
+    // Existing SVG loader
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -21,9 +22,30 @@ const nextConfig = {
           },
         },
       ],
-    })
+    });
 
-    return config
+
+    // PDF.js worker and canvas configuration
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      canvas: false,
+      encoding: false,
+      'pdfjs-dist/build/pdf.worker.js': path.resolve(
+        __dirname,
+        'node_modules/pdfjs-dist/build/pdf.worker.js'
+      )
+    };
+
+    // Add worker-loader configuration
+    config.module.rules.push({
+      test: /pdf\.worker\.(min\.)?js/,
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/worker/[hash][ext][query]',
+      },
+    });
+
+    return config;
   },
   async redirects() {
     return [
@@ -39,6 +61,6 @@ const nextConfig = {
       }
     ]
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
