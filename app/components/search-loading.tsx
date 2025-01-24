@@ -2,52 +2,91 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check } from 'lucide-react'
 
+export type SearchProgress = {
+  queryStarted: boolean;
+  upstashComplete: boolean;
+  metadataStarted: boolean;
+  metadataComplete: boolean;
+  complete: boolean;
+}
+
 const loadingMessages = [
-  "Initializing search...",
-  "Scanning through Family Court cases...",
-  "Analyzing case precedents...",
-  "Cross-referencing jurisdictions...",
-  "Processing citations...",
-  "Extracting key legal principles...",
-  "Applying relevance filters...",
-  "Building response...",
+  {
+    message: "Sending query to search engine...",
+    requiredState: "queryStarted"
+  },
+  {
+    message: "Retrieving relevant case documents...",
+    requiredState: "upstashComplete"
+  },
+  {
+    message: "Fetching case metadata...",
+    requiredState: "metadataStarted"
+  },
+  {
+    message: "Processing case details...",
+    requiredState: "metadataComplete"
+  },
+  {
+    message: "Preparing results...",
+    requiredState: "complete"
+  }
 ]
 
-export function SearchLoading() {
+interface SearchLoadingProps {
+  progress: SearchProgress;
+}
+
+export function SearchLoading({ progress }: SearchLoadingProps) {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
-  const [isDone, setIsDone] = useState(false)
   const [shouldShow, setShouldShow] = useState(true)
 
+  // Get the highest progress state that is true
+  const getCurrentProgressIndex = () => {
+    if (progress.complete) return loadingMessages.length - 1;
+    if (progress.metadataComplete) return 3;
+    if (progress.metadataStarted) return 2;
+    if (progress.upstashComplete) return 1;
+    if (progress.queryStarted) return 0;
+    return -1;
+  }
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (currentMessageIndex < loadingMessages.length - 1) {
-        setCurrentMessageIndex(prev => prev + 1)
-      } else if (!isDone) {
-        setIsDone(true)
-        // Wait a bit before starting the fade out
-        setTimeout(() => {
-          setShouldShow(false)
-        }, 1000)
-      }
-    }, 800)
+    const targetIndex = getCurrentProgressIndex();
+    if (targetIndex > currentMessageIndex) {
+      // Add a small delay before showing next message
+      const timeout = setTimeout(() => {
+        setCurrentMessageIndex(targetIndex);
+      }, 800);
+      return () => clearTimeout(timeout);
+    }
+  }, [progress, currentMessageIndex]);
 
-    return () => clearInterval(interval)
-  }, [currentMessageIndex, isDone])
+  // When complete, wait a bit before hiding
+  useEffect(() => {
+    if (progress.complete) {
+      const timeout = setTimeout(() => {
+        setShouldShow(false);
+      }, 2000); // Linger for 2 seconds after completion
+      return () => clearTimeout(timeout);
+    }
+  }, [progress.complete]);
 
-  if (!shouldShow) return null
+  if (!shouldShow) return null;
 
   return (
     <motion.div 
-      className="fixed inset-0 bg-white/95 backdrop-blur-sm flex items-center justify-center z-50"
-      initial={{ opacity: 1 }}
+      className="mt-24 flex items-center justify-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-md w-full space-y-4">
+      <div className="w-full max-w-md space-y-4 bg-white/50 backdrop-blur-sm p-6">
         <AnimatePresence mode="popLayout">
-          {loadingMessages.slice(0, currentMessageIndex + 1).map((message, index) => (
+          {loadingMessages.slice(0, currentMessageIndex + 1).map((messageObj, index) => (
             <motion.div
-              key={message}
+              key={messageObj.message}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
@@ -59,22 +98,9 @@ export function SearchLoading() {
               ) : (
                 <div className="w-4 h-4 rounded-full border-2 border-gray-300 border-t-gray-600 animate-spin" />
               )}
-              {message}
+              {messageObj.message}
             </motion.div>
           ))}
-        </AnimatePresence>
-        
-        <AnimatePresence>
-          {isDone && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-3 text-sm text-green-600 font-medium"
-            >
-              <Check className="w-4 h-4" />
-              Done!
-            </motion.div>
-          )}
         </AnimatePresence>
       </div>
     </motion.div>

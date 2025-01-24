@@ -11,7 +11,7 @@ export function NavHeader({ title }: NavHeaderProps) {
         <Link href="/" className="text-white text-2xl font-serif">
           {title}
         </Link>
-        <div className="flex gap-8 text-sm text-gray-400">
+        <div className="flex gap-8 text-sm text-gray-100">
           <Link href="/about" className="hover:text-white transition-colors">
             ABOUT
           </Link>

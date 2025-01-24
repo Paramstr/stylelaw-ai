@@ -6,9 +6,10 @@ import { SiteFooter } from '../components/site-footer'
 import { FilterSection } from '../components/filter-section'
 import { SearchBar } from '../components/search-bar'
 import CaseSearchResult from '../components/case-search-result'
-import { SearchLoading } from '../components/search-loading'
+import { SearchLoading, SearchProgress } from '../components/search-loading'
 import { searchDocuments } from '../lib/research/search-client'
 import type { CaseData } from '@/../types/caseData'
+import { useSearchParams } from 'next/navigation'
 
 interface SearchResult {
   id: string
@@ -22,11 +23,21 @@ interface RawSearchResult {
 }
 
 export default function ResearchPage() {
+  const searchParams = useSearchParams()
+  const initialCount = parseInt(searchParams.get('count') || '3', 10)
+  
   const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState('')
   const [currentQuery, setCurrentQuery] = useState('')
-  const [resultsCount, setResultsCount] = useState(1)
+  const [resultsCount, setResultsCount] = useState(initialCount)
+  const [searchProgress, setSearchProgress] = useState<SearchProgress>({
+    queryStarted: false,
+    upstashComplete: false,
+    metadataStarted: false,
+    metadataComplete: false,
+    complete: false
+  })
 
   // Fetch metadata for a single case
   const fetchCaseMetadata = async (caseId: string): Promise<CaseData> => {
@@ -59,10 +70,28 @@ export default function ResearchPage() {
     setResults([])
     setCurrentQuery(searchText.trim())
     
+    // Reset progress
+    setSearchProgress({
+      queryStarted: false,
+      upstashComplete: false,
+      metadataStarted: false,
+      metadataComplete: false,
+      complete: false
+    })
+    
     try {
+      // Start search
+      setSearchProgress(prev => ({ ...prev, queryStarted: true }))
+      
       // First do the actual search to get results
       console.log('Calling searchDocuments...');
       const searchResults = await searchDocuments(searchText.trim(), resultsCount) as RawSearchResult[];
+      
+      // Mark upstash complete
+      setSearchProgress(prev => ({ ...prev, upstashComplete: true }))
+      
+      // Start metadata fetch
+      setSearchProgress(prev => ({ ...prev, metadataStarted: true }))
       
       // Fetch metadata for each unique case
       const uniqueCaseIds = new Set(searchResults.map(result => result.id.split('-')[0]));
@@ -70,6 +99,9 @@ export default function ResearchPage() {
       
       // Wait for all metadata to be fetched
       const metadataResults = await Promise.allSettled(metadataPromises);
+      
+      // Mark metadata complete
+      setSearchProgress(prev => ({ ...prev, metadataComplete: true }))
       
       // Create a map of case IDs to their metadata
       const metadataMap = new Map<string, CaseData>();
@@ -102,12 +134,19 @@ export default function ResearchPage() {
       });
       
       setResults(mappedResults)
+      
+      // Mark complete
+      setSearchProgress(prev => ({ ...prev, complete: true }))
     } catch (error) {
       console.error('Search error in page component:', error)
       setError(error instanceof Error ? error.message : 'Search failed')
       setResults([])
     } finally {
-      setIsSearching(false)
+      // Don't set isSearching to false here - let the loading component handle it
+      // after it's done showing the completion state
+      setTimeout(() => {
+        setIsSearching(false)
+      }, 2500) // Wait for loading animation to complete
     }
   }
 
@@ -126,16 +165,18 @@ export default function ResearchPage() {
       <NavHeader title="DONNA | RESEARCH" />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
-          <div className="w-full max-w-4xl mx-auto space-y-6 mt-6">
-            <FilterSection />
+          <div className="w-full max-w-4xl mx-auto space-y-6 mt-12">
+            <FilterSection onResultsCountChange={handleResultsCountChange} />
             <SearchBar onSearch={handleSearch} />
           </div>
           
-          {isSearching && <SearchLoading />}
+          {isSearching && <SearchLoading progress={searchProgress} />}
           
           {results.length > 0 && !isSearching && (
             <>
-              <h2 className="text-base font-medium text-gray-500 mt-24 mb-4">Search Results</h2>
+              <h2 className="text-base font-medium text-gray-500 mt-24 mb-4">
+                Showing {results.length} Results
+              </h2>
               <div className="space-y-6">
                 {results.map((result) => (
                   <CaseSearchResult

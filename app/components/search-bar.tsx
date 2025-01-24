@@ -16,7 +16,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ onSearch }: SearchBarProps) {
-  const [selectedMode, setSelectedMode] = useState("enabled")
+  const [selectedMode, setSelectedMode] = useState("disabled")
   const [query, setQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
 
@@ -68,7 +68,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                 >
                   <Sparkles 
                     className={`w-4 h-4 transition-all duration-300 ${
-                      selectedMode === "enabled" ? 'text-green-500 filter drop-shadow-[0_0_3px_rgba(59,130,246,0.5)]' : 'text-yellow-500 filter drop-shadow-[0_0_3px_rgba(234,179,8,0.5)]'
+                      selectedMode === "enabled" ? 'text-yellow-500 filter drop-shadow-[0_0_3px_rgba(59,130,246,0.5)]' : 'text-green-600 filter drop-shadow-[0_0_3px_rgba(234,179,8,0.5)]'
                     }`} 
                   />
                   <span className="text-sm">

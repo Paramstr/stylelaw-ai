@@ -23,25 +23,26 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 interface FilterSectionProps {
   className?: string
+  onResultsCountChange?: (count: number) => void
 }
 
 type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year' | 'custom';
 type Category = 'family-law' | 'court-of-appeal' | 'district-court' | 'high-court' | 'supreme-court';
 type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
-type ResultsCount = 10 | 20 | 50 | 100;
+type ResultsCount = 1 | 3 | 5 | 10 | 20 | 50 | 100;
 
-export function FilterSection({ className }: FilterSectionProps) {
+export function FilterSection({ className, onResultsCountChange }: FilterSectionProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  const currentCount = parseInt(searchParams.get('count') || '10', 10)
+  const currentCount = parseInt(searchParams.get('count') || '3', 10)
   const currentQuery = searchParams.get('q') || ''
   
   const [date, setDate] = useState<Date>()
   const [timeRange, setTimeRange] = useState<TimeRange>('any')
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(['family-law'])
   const [selectedRegion, setSelectedRegion] = useState<Region>('new-zealand')
-  const [resultsCount, setResultsCount] = useState<ResultsCount>(10)
+  const [resultsCount, setResultsCount] = useState<ResultsCount>(currentCount as ResultsCount || 3)
   const [timeOpen, setTimeOpen] = useState(false)
   const [regionOpen, setRegionOpen] = useState(false)
   const [categoryOpen, setCategoryOpen] = useState(false)
@@ -105,7 +106,11 @@ export function FilterSection({ className }: FilterSectionProps) {
 
   const handleResultsCountChange = (count: ResultsCount) => {
     setResultsCount(count);
-    handleCountChange(count);
+    onResultsCountChange?.(count);
+    // Update URL
+    const params = new URLSearchParams(searchParams)
+    params.set('count', count.toString())
+    router.push(`/research?${params.toString()}`)
   };
 
   const removeFilter = (type: 'category' | 'time' | 'region', value?: Category) => {
@@ -117,15 +122,6 @@ export function FilterSection({ className }: FilterSectionProps) {
     } else if (type === 'region') {
       setSelectedRegion('new-zealand')
     }
-  }
-
-  const handleCountChange = (count: number) => {
-    // Create new URL with updated count
-    const params = new URLSearchParams(searchParams)
-    params.set('count', count.toString())
-    
-    // Navigate to new URL
-    router.push(`/research?${params.toString()}`)
   }
 
   return (
@@ -322,7 +318,7 @@ export function FilterSection({ className }: FilterSectionProps) {
             </CollapsibleTrigger>
             <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
-                {[10, 20, 50, 100].map((count) => (
+                {[1, 3, 5, 10, 20, 50, 100].map((count) => (
                   <Button
                     key={count}
                     variant="ghost"

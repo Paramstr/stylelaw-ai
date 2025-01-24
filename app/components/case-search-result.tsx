@@ -46,7 +46,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
 
   return (
     <Card className="bg-white border border-black rounded-none">
-      <div className="divide-y divide-black">
+      <div className="divide-black">
         {/* Header Section */}
         <div className="p-8 relative">
           <div className="flex justify-between items-start mb-6">
@@ -57,6 +57,9 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                   <Badge variant="outline" className="rounded-none border-0 bg-black text-white">
                     {caseData.coreInfo.status}
                   </Badge>
+                )}
+                {caseData.pdfFile && (
+                  <span className="text-sm font-mono text-black/40">{caseData.pdfFile}</span>
                 )}
               </div>
               {caseData.coreInfo.shortTitle && (
@@ -138,7 +141,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                 }}
                 className="overflow-hidden"
               >
-                <div className="border-t border-black">
+                <div className="border-black">
                   <div className="flex justify-center">
                     {["Details", "Issues", "Significance", "History", "Authorities"].map((tab) => (
                       <button
