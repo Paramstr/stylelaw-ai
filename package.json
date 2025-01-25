@@ -47,6 +47,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tippy.js": "^6.3.7",
     "usehooks-ts": "^3.1.0",
+    "vercel": "^39.3.0",
     "wink-porter2-stemmer": "^2.0.1",
     "wink-tokenizer": "^5.3.0"
   },
