@@ -175,11 +175,11 @@ export default function ResearchPage() {
           )}
           
           {results.length > 0 && !isSearching && (
-            <>
-              <h2 className="text-base font-medium text-gray-500 mt-12 md:mt-24 mb-4 max-w-[1800px] mx-auto">
+            <div className="max-w-[1600px] mx-auto mt-12 md:mt-24">
+              <h2 className="text-base font-medium text-gray-500 mb-4">
                 Showing {results.length} Results
               </h2>
-              <div className="space-y-4 md:space-y-6 w-full max-w-[1800px] mx-auto">
+              <div className="space-y-4 md:space-y-12">
                 {results.map((result) => (
                   <CaseSearchResult
                     key={result.id}
@@ -187,7 +187,7 @@ export default function ResearchPage() {
                   />
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           {error && (

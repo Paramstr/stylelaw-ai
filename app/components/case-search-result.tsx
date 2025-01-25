@@ -62,92 +62,99 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
   }
 
   return (
-    <Card className="bg-white border border-black rounded-none w-full">
+    <Card className="bg-white border border-black rounded-none w-full max-w-[1600px] mx-auto border-l-[9px]">
       <div className="divide-black">
         {/* Header Section */}
-        <div className="p-4 md:p-8 relative grid grid-cols-1 md:grid-cols-[1fr,800px] gap-4 md:gap-6">
-          {/* Left Column - Details */}
-          <div className="space-y-4 md:space-y-6">
-            <div className="space-y-3 md:space-y-4">
-              <div className="flex flex-wrap items-center gap-3">
-                <motion.div className="text-sm font-mono break-all">{caseData.coreInfo.citation}</motion.div>
-                {caseData.pdfFile && (
-                  <span className="text-sm font-mono text-black/40 break-all">{caseData.pdfFile}</span>
+        <div className="flex flex-col">
+          {/* Top row with two columns */}
+          <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-[1fr,auto] gap-4 md:gap-6">
+            {/* Left Column - Details */}
+            <div className="space-y-4 md:space-y-6">
+              <div className="space-y-3 md:space-y-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <motion.div className="text-sm font-mono break-all">{caseData.coreInfo.citation}</motion.div>
+                  {caseData.pdfFile && (
+                    <span className="text-sm font-mono text-black/40 break-all">{caseData.pdfFile}</span>
+                  )}
+                </div>
+                {caseData.coreInfo.title && (
+                  <motion.h3 className="text-xl md:text-2xl font-serif tracking-tight">{caseData.coreInfo.title}</motion.h3>
+                )}
+                {caseData.coreInfo.status && (
+                  <Badge variant="outline" className="rounded-none border-0 bg-black text-white">
+                    {caseData.coreInfo.status}
+                  </Badge>
                 )}
               </div>
-              {caseData.coreInfo.title && (
-                <motion.h3 className="text-xl md:text-2xl font-serif tracking-tight">{caseData.coreInfo.title}</motion.h3>
-              )}
-              {caseData.coreInfo.status && (
-                <Badge variant="outline" className="rounded-none border-0 bg-black text-white">
-                  {caseData.coreInfo.status}
-                </Badge>
-              )}
+
+              <div className="flex flex-wrap items-center gap-3 md:gap-6 text-sm font-serif text-black/60">
+                {caseData.coreInfo.court && (
+                  <div className="flex items-center gap-2">
+                    <Scale className="h-4 w-4" />
+                    <span>{caseData.coreInfo.court}</span>
+                  </div>
+                )}
+                {caseData.coreInfo.jurisdiction && <span>{caseData.coreInfo.jurisdiction}</span>}
+                {caseData.coreInfo.judgmentDate && (
+                  <span>{new Date(caseData.coreInfo.judgmentDate).toLocaleDateString()}</span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {(caseData.classification.areasOfLaw || []).map((area: string) => (
+                  <Badge
+                    key={area}
+                    variant="secondary"
+                    className="rounded-none bg-black/5 text-black hover:bg-black/10 border-0"
+                  >
+                    {area}
+                  </Badge>
+                ))}
+                {(caseData.classification.subAreas || []).map((area: string) => (
+                  <Badge
+                    key={area}
+                    variant="outline"
+                    className="rounded-none border-black/10 text-black/60 hover:bg-black/5"
+                  >
+                    {area}
+                  </Badge>
+                ))}
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 md:gap-6 text-sm font-serif text-black/60">
-              {caseData.coreInfo.court && (
-                <div className="flex items-center gap-2">
-                  <Scale className="h-4 w-4" />
-                  <span>{caseData.coreInfo.court}</span>
-                </div>
-              )}
-              {caseData.coreInfo.jurisdiction && <span>{caseData.coreInfo.jurisdiction}</span>}
-              {caseData.coreInfo.judgmentDate && (
-                <span>{new Date(caseData.coreInfo.judgmentDate).toLocaleDateString()}</span>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {(caseData.classification.areasOfLaw || []).map((area: string) => (
-                <Badge
-                  key={area}
-                  variant="secondary"
-                  className="rounded-none bg-black/5 text-black hover:bg-black/10 border-0"
-                >
-                  {area}
-                </Badge>
-              ))}
-              {(caseData.classification.subAreas || []).map((area: string) => (
-                <Badge
-                  key={area}
-                  variant="outline"
-                  className="rounded-none border-black/10 text-black/60 hover:bg-black/5"
-                >
-                  {area}
-                </Badge>
-              ))}
+            {/* Right Column - Controls */}
+            <div>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className={`group p-2 flex items-center gap-0 hover:gap-2 transition-all duration-200 ${
+                  isExpanded 
+                    ? "bg-white border border-black hover:bg-black/5" 
+                    : "bg-black hover:bg-black/90"
+                }`}
+              >
+                <ChevronDown
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    isExpanded ? "text-black" : "text-white"
+                  } ${isExpanded ? "transform rotate-180" : ""}`}
+                />
+                <span className={`text-sm overflow-hidden w-0 group-hover:w-[4.2rem] whitespace-nowrap transition-all duration-200 ${
+                  isExpanded ? "text-black" : "text-white"
+                }`}>
+                  {isExpanded ? "Close" : "Expand"}
+                </span>
+              </button>
             </div>
           </div>
 
-          {/* Right Column - Controls & Summary */}
-          <div className="flex flex-col items-end gap-8">
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className={`group p-2  flex items-center gap-0 hover:gap-2 transition-all duration-200 ${
-                isExpanded 
-                  ? "bg-white border border-black hover:bg-black/5" 
-                  : "bg-black hover:bg-black/90"
-              }`}
-            >
-              <ChevronDown
-                className={`w-5 h-5 transition-transform duration-200 ${
-                  isExpanded ? "text-black" : "text-white"
-                } ${isExpanded ? "transform rotate-180" : ""}`}
-              />
-              <span className={`text-sm overflow-hidden w-0 group-hover:w-[4.2rem] whitespace-nowrap transition-all duration-200 ${
-                isExpanded ? "text-black" : "text-white"
-              }`}>
-                {isExpanded ? "Close" : "Expand"}
-              </span>
-            </button>
-            {caseData.aiSummary && (
+          {/* Bottom row - AI Summary */}
+          {caseData.aiSummary && (
+            <div className="px-4 md:px-8 pb-4 md:pb-8">
               <div className="bg-[#2F4F4F] p-4 md:p-6 w-full">
                 <h4 className="text-base font-medium mb-2 md:mb-3 text-white uppercase tracking-wide">AI Summary</h4>
                 <p className="text-sm text-white/95">{caseData.aiSummary}</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="relative">
@@ -166,7 +173,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                 }}
                 className="overflow-hidden"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-4 md:gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-0">
                   {/* Left Column - Tabs and Content */}
                   <div className="min-h-[400px] md:min-h-[800px]">
                     <div className="flex flex-wrap justify-start md:justify-center">
@@ -248,7 +255,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
                   <div className="min-h-[400px] md:min-h-[800px]">
                     <div className="h-full">
                       <div className="h-full">
-                        <div className="h-[calc(100%-3rem)] p-4 md:p-8">
+                        <div className="h-[calc(100%-3rem)] py-8 pr-8">
                           <PDFViewer 
                             fileUrl={`/api/pdf/${caseData.pdfFile}`}
                             base64Data={caseData.pdfBase64}
