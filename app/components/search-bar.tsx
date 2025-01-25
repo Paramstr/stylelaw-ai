@@ -13,11 +13,12 @@ import { cn } from "@/lib/utils"
 
 interface SearchBarProps {
   onSearch: (query: string) => void
+  defaultValue?: string
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
+export function SearchBar({ onSearch, defaultValue = '' }: SearchBarProps) {
   const [selectedMode, setSelectedMode] = useState("disabled")
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState(defaultValue)
   const [isSearching, setIsSearching] = useState(false)
 
   const modes = {
@@ -51,8 +52,8 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask Donna about..."
-            className="w-full text-lg font-serif text-[#6B7280] placeholder:text-[#6B7280] focus:outline-none"
+            placeholder="Search for ..."
+            className="w-full text-lg font-serif text-black placeholder:text-[#6B7280] focus:outline-none"
           />
         </div>
         

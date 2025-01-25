@@ -32,14 +32,13 @@ export function HomeFeatures() {
             
             <div className="absolute -left-16 bottom-[15%] z-10 w-full max-w-[90%] md:max-w-md">
               <FeatureCard
-                label="Drafting Assistant"
+                label="Drafting Assistant (Coming Soon)"
                 title="COMPOSE"
                 description="Crafts perfect citations and suggests winning precedents as you write, swiftly turning good briefs into legal masterpieces."
                 dark
                 alignRight
-                onClick={handleComposeClick}
-                tryButtonPosition="left"
-                tryButtonText="Beta"
+                tryButtonText="Coming Soon"
+                className="opacity-75 cursor-not-allowed"
               />
             </div>
           </div>

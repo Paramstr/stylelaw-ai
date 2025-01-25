@@ -56,7 +56,11 @@ export async function POST(request: NextRequest) {
     let prompt = '';
     switch (task.type as ClaudeTask['type']) {
       case 'extract_metadata':
-        prompt = `You are a legal document analyzer. Extract comprehensive metadata from the given legal case text. Format the response as a JSON object matching this TypeScript interface:
+        prompt = `You are a legal document analyzer. Extract comprehensive metadata from the given legal case text. 
+
+IMPORTANT: Your response must be ONLY a valid JSON object. Do not include any explanatory text, markdown formatting, or additional content before or after the JSON.
+
+Format the response as a JSON object matching this TypeScript interface:
 
 interface CaseData {
   coreInfo: {
@@ -104,6 +108,11 @@ interface CaseData {
       level: string;
       nature: string;
     };
+    monetaryValue?: {
+      amount: number;
+      type: string;
+      currency: string;
+    };
   };
   strategy: {
     keyIssues: Array<{
@@ -129,18 +138,90 @@ interface CaseData {
       };
     };
   };
+  practice: {
+    significance: {
+      precedentValue: string;
+      innovations: string[];
+      implications: string[];
+      paragraphs: number[];
+    };
+    applicability: {
+      keyFactors: Array<{
+        factor: string;
+        paragraphs: number[];
+      }>;
+      limitations: Array<{
+        limitation: string;
+        paragraphs: number[];
+      }>;
+      scope: Array<{
+        application: string;
+        paragraphs: number[];
+      }>;
+    };
+  };
+  history: {
+    procedural: Array<{
+      date: string;
+      event: string;
+      outcome: string;
+      paragraphs: number[];
+    }>;
+    related: Array<{
+      citation: string;
+      relationship: string;
+      status: string;
+    }>;
+    subsequent: Array<{
+      citation: string;
+      treatment: string;
+      impact: string;
+    }>;
+  };
+  authorities: {
+    legislation: Array<{
+      title: string;
+      provisions: string[];
+      purpose: string;
+      treatment: string;
+      impact: string;
+      paragraphs: number[];
+    }>;
+    cases: Array<{
+      citation: string;
+      purpose: string;
+      treatment: string;
+      principle: string;
+      paragraphs: number[];
+    }>;
+    keyPassages: Array<{
+      text: string;
+      paragraph: number;
+      topic: string;
+      significance: string;
+    }>;
+  };
 }
 
 Rules:
 1. Extract ONLY factual information present in the text
-2. Use empty arrays [] or empty strings "" if information is not found
-3. Format dates consistently (e.g., "20 May 2024" for judgment dates)
-4. Include complete names and titles where available
-5. For paragraph references, use actual paragraph numbers from the text
-6. Provide a concise but comprehensive AI summary
-7. Be precise with legal terminology and classifications
-8. If certain complex fields cannot be reliably extracted, use null or omit them
-9. Focus on accuracy over completeness
+2. For significance and history sections:
+   - Always provide precedentValue and at least one implication
+   - Include all procedural history steps mentioned
+   - List all related and subsequent cases referenced
+   - Ensure proper paragraph references
+3. Use empty arrays [] if no specific items found, but always include the parent objects
+4. Format dates consistently (e.g., "20 May 2024")
+5. Include complete names and titles
+6. For paragraph references, use actual paragraph numbers from the text
+7. Provide a concise but comprehensive AI summary
+8. Be precise with legal terminology and classifications
+9. If certain complex fields cannot be reliably extracted, use null or omit them
+10. Focus on accuracy over completeness
+11. For history, include all procedural steps and related/subsequent cases mentioned
+12. For authorities, extract all cited legislation and cases with their treatment
+13. For significance, analyze the precedential value and implications thoroughly
+14. CRITICAL: Return ONLY the JSON object with no additional text or formatting
 
 Legal case text:`;
         break;

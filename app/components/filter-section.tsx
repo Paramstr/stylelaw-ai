@@ -6,7 +6,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
@@ -26,7 +25,7 @@ interface FilterSectionProps {
   onResultsCountChange?: (count: number) => void
 }
 
-type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year' | 'custom';
+type TimeRange = 'any' | 'day' | 'week' | 'month' | 'year';
 type Category = 'family-law' | 'court-of-appeal' | 'district-court' | 'high-court' | 'supreme-court';
 type Region = 'new-zealand' | 'australia' | 'uk' | 'canada';
 
@@ -41,7 +40,6 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
   const currentCount = parseInt(searchParams.get('count') ?? DEFAULT_RESULTS_COUNT.toString(), 10)
   const currentQuery = searchParams.get('q') || ''
   
-  const [date, setDate] = useState<Date>()
   const [timeRange, setTimeRange] = useState<TimeRange>('any')
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(['family-law'])
   const [selectedRegion, setSelectedRegion] = useState<Region>('new-zealand')
@@ -77,8 +75,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
     'day': 'Past day',
     'week': 'Past week',
     'month': 'Past month',
-    'year': 'Past year',
-    'custom': 'Custom date'
+    'year': 'Past year'
   }
 
   const regionLabels: Record<Region, string> = {
@@ -90,9 +87,6 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
 
   const handleTimeRangeSelect = (range: TimeRange) => {
     setTimeRange(range)
-    if (range !== 'custom') {
-      setDate(undefined)
-    }
   }
 
   const handleCategoryToggle = (category: Category) => {
@@ -117,7 +111,6 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
       setSelectedCategories(prev => prev.filter(c => c !== value))
     } else if (type === 'time') {
       setTimeRange('any')
-      setDate(undefined)
     } else if (type === 'region') {
       setSelectedRegion('new-zealand')
     }
@@ -136,52 +129,26 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
                 className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors"
               >
                 <Clock className="h-4 w-4" />
-                {timeRange === 'custom' && date ? format(date, "PPP") : timeRangeLabels[timeRange]}
+                {timeRangeLabels[timeRange]}
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
                 {Object.entries(timeRangeLabels).map(([key, label]) => (
-                  key !== 'custom' && (
-                    <Button
-                      key={key}
-                      variant="ghost"
-                      size="sm"
-                      className={cn(
-                        "w-full justify-start rounded-none h-9",
-                        timeRange === key ? "bg-black text-white" : "hover:bg-black hover:text-white"
-                      )}
-                      onClick={() => handleTimeRangeSelect(key as TimeRange)}
-                    >
-                      {label}
-                    </Button>
-                  )
+                  <Button
+                    key={key}
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                      "w-full justify-start rounded-none h-9",
+                      timeRange === key ? "bg-black text-white" : "hover:bg-black hover:text-white"
+                    )}
+                    onClick={() => handleTimeRangeSelect(key as TimeRange)}
+                  >
+                    {label}
+                  </Button>
                 ))}
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className={cn(
-                        "w-full justify-start rounded-none h-9",
-                        timeRange === 'custom' ? "bg-black text-white" : "hover:bg-black hover:text-white"
-                      )}
-                    >
-                      <CalendarIcon className="h-4 w-4 mr-2" />
-                      {date ? format(date, "PPP") : "Pick a date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0 rounded-none border border-black">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                      className="rounded-none border-0"
-                    />
-                  </PopoverContent>
-                </Popover>
               </div>
             </CollapsibleContent>
           </div>

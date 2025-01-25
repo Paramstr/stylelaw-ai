@@ -22,7 +22,7 @@ const WelcomeCard = () => {
             <ul className="space-y-2.5 text-base text-gray-700">
               <li className="flex items-center">
                 <span className="mr-2">→</span>
-                Case extraction may take a moment
+                Case analysis may take some time
               </li>
               <li className="flex items-center">
                 <span className="mr-2">→</span>

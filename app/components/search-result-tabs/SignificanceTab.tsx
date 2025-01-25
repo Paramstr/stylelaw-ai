@@ -8,7 +8,12 @@ interface SignificanceTabProps {
 }
 
 export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabProps) {
-  if (!practice?.significance) {
+  const hasSignificanceData = practice?.significance?.precedentValue || 
+                             (practice?.significance?.implications && practice.significance.implications.length > 0);
+  const hasApplicabilityData = practice?.applicability?.keyFactors?.length || 
+                              practice?.applicability?.limitations?.length;
+
+  if (!hasSignificanceData && !hasApplicabilityData) {
     return (
       <div className="p-8">
         <h4 className="text-xl font-medium mb-6">Significance and Applicability</h4>
@@ -23,17 +28,19 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
       <div className="space-y-6">
         <div className="p-6">
           <div className="space-y-6">
-            <div>
-              <h5 className="text-sm font-medium mb-4 flex items-center gap-2">
-                <span>Precedent Value</span>
-                {practice.significance.paragraphs && practice.significance.paragraphs.length > 0 && (
-                  <CitationButton paragraphs={practice.significance.paragraphs} onParagraphClick={onParagraphClick} />
-                )}
-              </h5>
-              <p className="text-sm text-black/60">{practice.significance.precedentValue}</p>
-            </div>
+            {practice?.significance?.precedentValue && (
+              <div>
+                <h5 className="text-sm font-medium mb-4 flex items-center gap-2">
+                  <span>Precedent Value</span>
+                  {practice.significance.paragraphs && practice.significance.paragraphs.length > 0 && (
+                    <CitationButton paragraphs={practice.significance.paragraphs} onParagraphClick={onParagraphClick} />
+                  )}
+                </h5>
+                <p className="text-sm text-black/60">{practice.significance.precedentValue}</p>
+              </div>
+            )}
 
-            {practice.significance.implications && practice.significance.implications.length > 0 && (
+            {practice?.significance?.implications && practice.significance.implications.length > 0 && (
               <div>
                 <h5 className="text-sm font-medium mb-3">Implications</h5>
                 <ul className="space-y-3">
@@ -50,12 +57,12 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {practice.applicability?.keyFactors && practice.applicability.keyFactors.length > 0 && (
+          {practice?.applicability?.keyFactors && practice.applicability.keyFactors.length > 0 && (
             <div className="p-6">
               <h5 className="text-sm font-medium mb-4">Key Factors</h5>
               <ul className="space-y-3">
                 {practice.applicability.keyFactors.map((factor, index) => {
-                  if (!factor) return null;
+                  if (!factor?.factor) return null;
                   return (
                     <li key={index} className="flex items-start gap-3">
                       <Check className="w-4 h-4 text-black mt-1 shrink-0" />
@@ -74,7 +81,7 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
             </div>
           )}
 
-          {practice.applicability?.limitations && (
+          {practice?.applicability?.limitations && practice.applicability.limitations.length > 0 && (
             <div className="p-6">
               <h5 className="text-sm font-medium mb-4">Limitations</h5>
               <ul className="space-y-3">
@@ -83,7 +90,7 @@ export function SignificanceTab({ practice, onParagraphClick }: SignificanceTabP
                     <AlertCircle className="w-4 h-4 text-black/40 mt-1 shrink-0" />
                     <div className="flex-1">
                       <span className="text-sm text-black/60">{limitation.limitation}</span>
-                      {limitation.paragraphs && (
+                      {limitation.paragraphs && limitation.paragraphs.length > 0 && (
                         <div className="mt-1">
                           <CitationButton paragraphs={limitation.paragraphs} onParagraphClick={onParagraphClick} />
                         </div>
