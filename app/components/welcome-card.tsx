@@ -4,7 +4,7 @@ const WelcomeCard = () => {
         <div className="space-y-8">
           <div>
             <h2 className="text-2xl font-medium tracking-wide text-black mb-4">
-              Welcome Friends
+              Donna Research Preview
             </h2>
             <p className="text-gray-800 text-base leading-relaxed">
               Explore <span className="font-semibold">2,781</span> New Zealand family court cases using natural language search. 
@@ -12,7 +12,7 @@ const WelcomeCard = () => {
           </div>
   
           <p className="text-gray-700 text-base leading-relaxed">
-            Experiment with different queries and see how the results show up. Make note of things that you think could be improved Each search result includes
+            Experiment with different queries across various themes. Each search result includes
             <span className="font-semibold text-gray-800"> numbered references </span> 
             that link directly to source paragraphs, helping you trace information to its origin.
           </p>
