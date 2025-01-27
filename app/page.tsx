@@ -21,7 +21,7 @@ export default function Page() {
               href="/research" 
               className="inline-block text-white text-lg hover:opacity-80 transition-opacity mb-24 border-b border-white pb-1"
             >
-              → Technical Preview
+              → Research Preview
             </Link>
           </div>
 
