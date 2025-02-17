@@ -1,35 +1,56 @@
 import { Button } from "@/components/ui/button"
+import { useState, useCallback } from 'react'
 
 interface CitationButtonProps {
+  citation?: string
   paragraphs?: number[]
   onParagraphClick?: (paragraph: number) => void
 }
 
-export function CitationButton({ paragraphs, onParagraphClick }: CitationButtonProps) {
+export function CitationButton({ citation, paragraphs, onParagraphClick }: CitationButtonProps) {
+  const [copied, setCopied] = useState(false)
 
-  if (!paragraphs || paragraphs.length === 0) {
-    return null
+  const handleCopyClick = useCallback(async () => {
+    if (citation) {
+      await navigator.clipboard.writeText(citation)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }, [citation])
+
+  const handleParagraphClick = useCallback((paragraph: number) => {
+    if (onParagraphClick) {
+      onParagraphClick(paragraph)
+    }
+  }, [onParagraphClick])
+
+  if (paragraphs) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {paragraphs.map((paragraph) => (
+          <Button
+            key={paragraph}
+            variant="outline"
+            size="sm"
+            onClick={() => handleParagraphClick(paragraph)}
+            className="text-xs h-6 px-2 py-0 rounded-sm border-black/20 hover:bg-black hover:text-white"
+          >
+            ¶{paragraph}
+          </Button>
+        ))}
+      </div>
+    )
   }
 
-  const handleClick = (para: number) => {
-    console.log('CitationButton: Button clicked for paragraph:', para);
-    onParagraphClick?.(para);
-  };
-
   return (
-    <div className="inline-flex gap-1 ml-2">
-      {paragraphs.map((para) => (
-        <Button
-          key={para}
-          variant="outline"
-          size="sm"
-          className="px-1.5 py-0.5 h-5 text-[11px] bg-gray-100 border-gray-400 text-gray-700 hover:bg-gray-200 hover:text-gray-800 hover:border-gray-400 transition-colors"
-          onClick={() => handleClick(para)}
-        >
-          {para}
-        </Button>
-      ))}
-    </div>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={handleCopyClick}
+      className="text-xs h-6 px-2 py-0 rounded-sm border-black/20 hover:bg-black hover:text-white"
+    >
+      {copied ? 'Copied!' : citation}
+    </Button>
   )
 }
 

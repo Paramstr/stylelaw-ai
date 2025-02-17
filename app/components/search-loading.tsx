@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check } from 'lucide-react'
 
@@ -42,14 +42,14 @@ export function SearchLoading({ progress }: SearchLoadingProps) {
   const [shouldShow, setShouldShow] = useState(true)
 
   // Get the highest progress state that is true
-  const getCurrentProgressIndex = () => {
+  const getCurrentProgressIndex = useCallback(() => {
     if (progress.complete) return loadingMessages.length - 1;
     if (progress.metadataComplete) return 3;
     if (progress.metadataStarted) return 2;
     if (progress.upstashComplete) return 1;
     if (progress.queryStarted) return 0;
     return -1;
-  }
+  }, [progress]);
 
   useEffect(() => {
     const targetIndex = getCurrentProgressIndex();
@@ -60,7 +60,7 @@ export function SearchLoading({ progress }: SearchLoadingProps) {
       }, 800);
       return () => clearTimeout(timeout);
     }
-  }, [progress, currentMessageIndex]);
+  }, [progress, currentMessageIndex, getCurrentProgressIndex]);
 
   // When complete, wait a bit before hiding
   useEffect(() => {

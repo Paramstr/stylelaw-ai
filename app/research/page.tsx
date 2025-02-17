@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { NavHeader } from '../components/nav-header'
 import { SiteFooter } from '../components/site-footer'
 import { FilterSection, DEFAULT_RESULTS_COUNT } from '../components/filter-section'
@@ -12,6 +12,7 @@ import type { CaseData } from '@/../types/caseData'
 import { useSearchParams } from 'next/navigation'
 // import WelcomeCard from '../components/welcome-card'
 import { ShowcaseCarousel } from '../components/showcase-carousel'
+import { useRouter } from 'next/navigation'
 
 interface SearchResult {
   id: string
@@ -26,6 +27,7 @@ interface RawSearchResult {
 
 export default function ResearchPage() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   
   const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -151,10 +153,17 @@ export default function ResearchPage() {
     }
   }
 
-  const handleResultsCountChange = (count: number) => {
-    console.log('Results count changed:', { count });
-    setResultsCount(count);
-  };
+  const handleResultsCountChange = useCallback((count: number) => {
+    // Update URL with new count
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('count', count.toString())
+    router.push(`/research?${params.toString()}`)
+  }, [router, searchParams])
+
+  const handleSearchComplete = useCallback((results: any) => {
+    setResults(results)
+    setIsSearching(false)
+  }, [])
 
   const hasResults = results.length > 0 || isSearching;
 

@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "../lib/utils"
 import { format } from "date-fns"
 import { CalendarIcon, Clock, Globe, Building2, FileText, Scale, ChevronDown, MapPin } from 'lucide-react'
-import { useState, useRef } from "react"
+import { useState, useRef, useCallback } from "react"
 import { useOnClickOutside } from 'usehooks-ts'
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -85,28 +85,32 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
     'canada': 'Canada'
   }
 
-  const handleTimeRangeSelect = (range: TimeRange) => {
+  const handleTimeRangeSelect = useCallback((range: TimeRange) => {
     setTimeRange(range)
-  }
+    setTimeOpen(false)
+  }, [])
 
-  const handleCategoryToggle = (category: Category) => {
+  const handleCategoryToggle = useCallback((category: Category) => {
     setSelectedCategories(prev =>
       prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
     )
-  }
+    setCategoryOpen(false)
+  }, [])
 
-  const handleRegionSelect = (region: Region) => {
+  const handleRegionSelect = useCallback((region: Region) => {
     setSelectedRegion(region)
-  }
+    setRegionOpen(false)
+  }, [])
 
-  const handleResultsCountChange = (count: ResultsCount) => {
-    setResultsCount(count);
+  const handleResultsCountChange = useCallback((count: ResultsCount) => {
+    setResultsCount(count)
     onResultsCountChange?.(count)
-  }
+    setCountOpen(false)
+  }, [onResultsCountChange])
 
-  const removeFilter = (type: 'category' | 'time' | 'region', value?: Category) => {
+  const removeFilter = useCallback((type: 'category' | 'time' | 'region', value?: Category) => {
     if (type === 'category' && value) {
       setSelectedCategories(prev => prev.filter(c => c !== value))
     } else if (type === 'time') {
@@ -114,13 +118,29 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
     } else if (type === 'region') {
       setSelectedRegion('new-zealand')
     }
-  }
+  }, [])
+
+  const handleTimeOpenChange = useCallback((open: boolean) => {
+    setTimeOpen(open)
+  }, [])
+
+  const handleRegionOpenChange = useCallback((open: boolean) => {
+    setRegionOpen(open)
+  }, [])
+
+  const handleCategoryOpenChange = useCallback((open: boolean) => {
+    setCategoryOpen(open)
+  }, [])
+
+  const handleCountOpenChange = useCallback((open: boolean) => {
+    setCountOpen(open)
+  }, [])
 
   return (
     <div className={cn("w-full flex justify-center", className)}>
       <div className="max-w-4xl w-full flex flex-wrap gap-3 items-center">
         {/* Time Range Filter */}
-        <Collapsible className="w-fit" open={timeOpen} onOpenChange={setTimeOpen}>
+        <Collapsible className="w-fit" open={timeOpen} onOpenChange={handleTimeOpenChange}>
           <div ref={timeRef}>
             <CollapsibleTrigger asChild>
               <Button 
@@ -155,7 +175,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
         </Collapsible>
 
         {/* Region Filter */}
-        <Collapsible className="w-fit" open={regionOpen} onOpenChange={setRegionOpen}>
+        <Collapsible className="w-fit" open={regionOpen} onOpenChange={handleRegionOpenChange}>
           <div ref={regionRef}>
             <CollapsibleTrigger asChild>
               <Button 
@@ -191,7 +211,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
         </Collapsible>
 
         {/* Category Filter */}
-        <Collapsible className="w-fit" open={categoryOpen} onOpenChange={setCategoryOpen}>
+        <Collapsible className="w-fit" open={categoryOpen} onOpenChange={handleCategoryOpenChange}>
           <div ref={categoryRef}>
             <CollapsibleTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors">
@@ -269,7 +289,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
         </Collapsible>
 
         {/* Results Count Filter */}
-        <Collapsible className="w-fit" open={countOpen} onOpenChange={setCountOpen}>
+        <Collapsible className="w-fit" open={countOpen} onOpenChange={handleCountOpenChange}>
           <div ref={countRef}>
             <CollapsibleTrigger asChild>
               <Button 

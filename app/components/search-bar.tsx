@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { cn } from "@/lib/utils"
 
 interface SearchBarProps {
@@ -37,11 +37,19 @@ export function SearchBar({ onSearch, defaultValue = '' }: SearchBarProps) {
     onSearch(query)
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  }, []);
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
-  }
+  }, [handleSearch]);
+
+  const handleModeChange = useCallback((mode: string) => {
+    setSelectedMode(mode);
+  }, []);
 
   return (
     <div className="w-full max-w-4xl">
@@ -50,7 +58,7 @@ export function SearchBar({ onSearch, defaultValue = '' }: SearchBarProps) {
           <input 
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             placeholder="Search for ..."
             className="w-full text-lg font-serif text-black placeholder:text-[#6B7280] focus:outline-none"
@@ -84,7 +92,7 @@ export function SearchBar({ onSearch, defaultValue = '' }: SearchBarProps) {
               >
                 {selectedMode !== "enabled" && (
                   <DropdownMenuItem 
-                    onClick={() => setSelectedMode("enabled")}
+                    onClick={() => handleModeChange("enabled")}
                     className="px-4 py-2 text-sm text-black hover:bg-black hover:text-white focus:bg-black focus:text-white rounded-none cursor-pointer border-b border-black"
                   >
                     {modes.enabled.name}
@@ -92,7 +100,7 @@ export function SearchBar({ onSearch, defaultValue = '' }: SearchBarProps) {
                 )}
                 {selectedMode !== "disabled" && (
                   <DropdownMenuItem 
-                    onClick={() => setSelectedMode("disabled")}
+                    onClick={() => handleModeChange("disabled")}
                     className="px-4 py-2 text-sm text-black hover:bg-black hover:text-white focus:bg-black focus:text-white rounded-none cursor-pointer border-b border-black"
                   >
                     {modes.disabled.name}

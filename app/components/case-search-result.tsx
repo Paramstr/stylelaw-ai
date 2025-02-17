@@ -56,6 +56,10 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
     }
   }, [activeTab, selectedParagraph])
 
+  const handleExpandClick = useCallback(() => {
+    setIsExpanded(prev => !prev);
+  }, []);
+
   // Early return if required data is missing
   if (!caseData?.coreInfo?.citation || !caseData?.classification) {
     return null
@@ -125,7 +129,7 @@ const CaseSearchResult = ({ caseData }: CaseSearchResultProps) => {
             {/* Right Column - Controls */}
             <div>
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={handleExpandClick}
                 className={`group p-2 flex items-center gap-0 hover:gap-2 transition-all duration-200 ${
                   isExpanded 
                     ? "bg-white border border-black hover:bg-black/5" 
