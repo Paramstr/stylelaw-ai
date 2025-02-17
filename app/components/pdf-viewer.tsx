@@ -27,21 +27,25 @@ export default function PDFViewer({ fileUrl, base64Data, searchQuery }: PDFViewe
         const highlightElements = document.querySelectorAll('.rpv-search__highlight');
         if (highlightElements.length > 0) {
           const element = highlightElements[0] as HTMLElement;
-          
-          // Get the PDF container element
           const container = document.querySelector('.rpv-default-layout__body');
-          
           if (container) {
-            // Calculate position with 50px offset
             const elementRect = element.getBoundingClientRect();
             const containerRect = container.getBoundingClientRect();
             const scrollOffset = elementRect.top - containerRect.top - 50;
             
-            // Smooth scroll with offset
+            // Initial smooth scroll to bring highlight into view
             container.scrollBy({
               top: scrollOffset,
               behavior: 'smooth'
             });
+            
+            // After a short delay, scroll up further by a fixed offset
+            setTimeout(() => {
+              container.scrollBy({
+                top: -20, // Adjust this value as needed
+                behavior: 'smooth'
+              });
+            }, 300);
           }
         }
         isSearching.current = false;
@@ -105,7 +109,7 @@ export default function PDFViewer({ fileUrl, base64Data, searchQuery }: PDFViewe
         }
         
         .rpv-default-layout__body {
-          padding: 0 !important;
+          padding: 32 0 0 0 !important;
         }
         
         .rpv-core__page-layer {

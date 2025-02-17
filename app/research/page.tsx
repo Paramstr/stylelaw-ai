@@ -10,7 +10,8 @@ import { SearchLoading, SearchProgress } from '../components/search-loading'
 import { searchDocuments } from '../lib/research/search-client'
 import type { CaseData } from '@/../types/caseData'
 import { useSearchParams } from 'next/navigation'
-import WelcomeCard from '../components/welcome-card'
+// import WelcomeCard from '../components/welcome-card'
+import { ShowcaseCarousel } from '../components/showcase-carousel'
 
 interface SearchResult {
   id: string
@@ -163,7 +164,8 @@ export default function ResearchPage() {
       <main className="flex-1 px-4 md:px-8 py-4 md:py-8">
         <div className="w-full">
           <div className="w-full max-w-4xl mx-auto space-y-4 md:space-y-6 mt-6 md:mt-12">
-            <WelcomeCard />
+            {/* <WelcomeCard /> */}
+            <ShowcaseCarousel />
             <FilterSection onResultsCountChange={handleResultsCountChange} />
             <SearchBar onSearch={handleSearch} />
           </div>
