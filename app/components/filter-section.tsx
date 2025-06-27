@@ -138,7 +138,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
 
   return (
     <div className={cn("w-full flex justify-center", className)}>
-      <div className="max-w-4xl w-full flex flex-wrap gap-3 items-center">
+      <div className="max-w-4xl w-full flex flex-wrap gap-2 sm:gap-3 items-center">
         {/* Time Range Filter */}
         <Collapsible className="w-fit" open={timeOpen} onOpenChange={handleTimeOpenChange}>
           <div ref={timeRef}>
@@ -146,14 +146,15 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors"
+                className="gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors text-xs sm:text-sm"
               >
-                <Clock className="h-4 w-4" />
-                {timeRangeLabels[timeRange]}
-                <ChevronDown className="h-4 w-4" />
+                <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">{timeRangeLabels[timeRange]}</span>
+                <span className="xs:hidden">Time</span>
+                <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
+            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[160px] sm:min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
                 {Object.entries(timeRangeLabels).map(([key, label]) => (
                   <Button
@@ -161,7 +162,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "w-full justify-start rounded-none h-9",
+                      "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                       timeRange === key ? "bg-black text-white" : "hover:bg-black hover:text-white"
                     )}
                     onClick={() => handleTimeRangeSelect(key as TimeRange)}
@@ -181,14 +182,15 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors"
+                className="gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors text-xs sm:text-sm"
               >
-                <MapPin className="h-4 w-4" />
-                {regionLabels[selectedRegion]}
-                <ChevronDown className="h-4 w-4" />
+                <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">{regionLabels[selectedRegion]}</span>
+                <span className="xs:hidden">Region</span>
+                <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
+            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[160px] sm:min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
                 {Object.entries(regionLabels).map(([key, label]) => (
                   <Button
@@ -196,12 +198,12 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "w-full justify-start rounded-none h-9",
+                      "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                       selectedRegion === key ? "bg-black text-white" : "hover:bg-black hover:text-white"
                     )}
                     onClick={() => handleRegionSelect(key as Region)}
                   >
-                    <Globe className="h-4 w-4 mr-2" />
+                    <Globe className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                     {label}
                   </Button>
                 ))}
@@ -214,73 +216,73 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
         <Collapsible className="w-fit" open={categoryOpen} onOpenChange={handleCategoryOpenChange}>
           <div ref={categoryRef}>
             <CollapsibleTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors">
-                <FileText className="h-4 w-4" fill="none" />
+              <Button variant="outline" size="sm" className="gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors text-xs sm:text-sm">
+                <FileText className="h-3 w-3 sm:h-4 sm:w-4" fill="none" />
                 Categories
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
+            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[160px] sm:min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
                 {/* Category buttons */}
                 <Button
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "w-full justify-start rounded-none h-9",
+                    "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                     selectedCategories.includes('family-law') ? "bg-black text-white" : "hover:bg-black hover:text-white"
                   )}
                   onClick={() => handleCategoryToggle('family-law')}
                 >
-                  <FileText className="h-4 w-4 mr-2" />
+                  <FileText className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   Family Law
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "w-full justify-start rounded-none h-9",
+                    "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                     selectedCategories.includes('court-of-appeal') ? "bg-black text-white" : "hover:bg-black hover:text-white"
                   )}
                   onClick={() => handleCategoryToggle('court-of-appeal')}
                 >
-                  <Scale className="h-4 w-4 mr-2" />
+                  <Scale className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   Court of Appeal
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "w-full justify-start rounded-none h-9",
+                    "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                     selectedCategories.includes('district-court') ? "bg-black text-white" : "hover:bg-black hover:text-white"
                   )}
                   onClick={() => handleCategoryToggle('district-court')}
                 >
-                  <Building2 className="h-4 w-4 mr-2" />
+                  <Building2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   District Court
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "w-full justify-start rounded-none h-9",
+                    "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                     selectedCategories.includes('high-court') ? "bg-black text-white" : "hover:bg-black hover:text-white"
                   )}
                   onClick={() => handleCategoryToggle('high-court')}
                 >
-                  <Building2 className="h-4 w-4 mr-2" />
+                  <Building2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   High Court
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   className={cn(
-                    "w-full justify-start rounded-none h-9",
+                    "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                     selectedCategories.includes('supreme-court') ? "bg-black text-white" : "hover:bg-black hover:text-white"
                   )}
                   onClick={() => handleCategoryToggle('supreme-court')}
                 >
-                  <Building2 className="h-4 w-4 mr-2" />
+                  <Building2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   Supreme Court
                 </Button>
               </div>
@@ -295,14 +297,15 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="gap-2 h-9 px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors"
+                className="gap-1 sm:gap-2 h-8 sm:h-9 px-2 sm:px-3 rounded-none border border-black hover:bg-black hover:text-white transition-colors text-xs sm:text-sm"
               >
-                <FileText className="h-4 w-4" fill="none" />
-                {resultsCount} Results
-                <ChevronDown className="h-4 w-4" />
+                <FileText className="h-3 w-3 sm:h-4 sm:w-4" fill="none" />
+                <span className="hidden xs:inline">{resultsCount} Results</span>
+                <span className="xs:hidden">{resultsCount}</span>
+                <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[180px]">
+            <CollapsibleContent className="absolute z-50 mt-1 bg-white border border-black min-w-[160px] sm:min-w-[180px]">
               <div className="grid grid-cols-1 divide-y divide-black">
                 {RESULTS_COUNT_VALUES.map((count) => (
                   <Button
@@ -310,7 +313,7 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "w-full justify-start rounded-none h-9",
+                      "w-full justify-start rounded-none h-8 sm:h-9 text-xs sm:text-sm",
                       resultsCount === count ? "bg-black text-white" : "hover:bg-black hover:text-white"
                     )}
                     onClick={() => handleResultsCountChange(count)}
@@ -324,17 +327,17 @@ export function FilterSection({ className, onResultsCountChange }: FilterSection
         </Collapsible>
 
         {/* Active Filters */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1 sm:gap-2 flex-wrap">
           {selectedCategories.map(category => (
             <div 
               key={category}
-              className="flex items-center border border-black px-2 h-9 gap-2 bg-black text-white"
+              className="flex items-center border border-black px-1 sm:px-2 h-8 sm:h-9 gap-1 sm:gap-2 bg-black text-white"
             >
-              <span className="text-sm">
+              <span className="text-xs sm:text-sm">
                 {category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
               </span>
               <button 
-                className="hover:text-red-600"
+                className="hover:text-red-600 text-xs sm:text-sm"
                 onClick={() => removeFilter('category', category)}
               >
                 ×

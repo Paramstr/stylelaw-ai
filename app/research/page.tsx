@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation'
 // import WelcomeCard from '../components/welcome-card'
 import { ShowcaseCarousel } from '../components/showcase-carousel'
 import { useRouter } from 'next/navigation'
+import { MobileAlert } from '../components/mobile-alert'
 
 interface SearchResult {
   id: string
@@ -170,9 +171,10 @@ export default function ResearchPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <NavHeader title="DONNA | RESEARCH" />
-      <main className="flex-1 px-4 md:px-8 py-4 md:py-8">
+      <MobileAlert />
+      <main className="flex-1 px-2 sm:px-4 md:px-8 py-2 sm:py-4 md:py-8">
         <div className="w-full">
-          <div className="w-full max-w-4xl mx-auto space-y-4 md:space-y-6 mt-6 md:mt-12">
+          <div className="w-full max-w-4xl mx-auto space-y-3 sm:space-y-4 md:space-y-6 mt-4 sm:mt-6 md:mt-12">
             {/* <WelcomeCard /> */}
             <ShowcaseCarousel />
             <FilterSection onResultsCountChange={handleResultsCountChange} />
@@ -180,17 +182,17 @@ export default function ResearchPage() {
           </div>
           
           {isSearching && (
-            <div className="max-w-[1800px] mx-auto mt-12 md:mt-24 flex justify-center">
+            <div className="max-w-[1800px] mx-auto mt-8 sm:mt-12 md:mt-24 flex justify-center">
               <SearchLoading progress={searchProgress} />
             </div>
           )}
           
           {results.length > 0 && !isSearching && (
-            <div className="max-w-[1600px] mx-auto mt-12 md:mt-24">
-              <h2 className="text-base font-medium text-gray-500 mb-4">
+            <div className="max-w-[1600px] mx-auto mt-8 sm:mt-12 md:mt-24">
+              <h2 className="text-sm sm:text-base font-medium text-gray-500 mb-3 sm:mb-4">
                 Showing {results.length} Results
               </h2>
-              <div className="space-y-4 md:space-y-12">
+              <div className="space-y-3 sm:space-y-4 md:space-y-12">
                 {results.map((result) => (
                   <CaseSearchResult
                     key={result.id}
@@ -202,7 +204,7 @@ export default function ResearchPage() {
           )}
 
           {error && (
-            <div className="text-red-500 mt-4">{error}</div>
+            <div className="text-red-500 mt-4 text-sm">{error}</div>
           )}
         </div>
       </main>

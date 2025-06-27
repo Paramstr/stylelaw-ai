@@ -7,6 +7,9 @@ module.exports = {
   safelist: ['ProseMirror'],
   theme: {
   	extend: {
+  		screens: {
+  			'xs': '475px',
+  		},
   		fontFamily: {
   			sans: [
   				'Inter',

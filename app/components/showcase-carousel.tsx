@@ -37,9 +37,9 @@ export function ShowcaseCarousel() {
             <CarouselItem key={index}>
               <div className="p-1">
                 <Card className="bg-white rounded-xl">
-                  <CardContent className="p-8">
+                  <CardContent className="p-4 sm:p-8">
                     <div>
-                      <h2 className="text-[32px] leading-tight font-serif text-black">{item.title}</h2>
+                      <h2 className="text-lg sm:text-[24px] md:text-[32px] leading-tight font-serif text-black">{item.title}</h2>
                     </div>
                   </CardContent>
                 </Card>
