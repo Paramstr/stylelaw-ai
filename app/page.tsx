@@ -374,7 +374,7 @@ export default function Page() {
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-white mb-12 max-w-2xl mx-auto">
-            Stay in command and in the loop; focus on strategy and results.
+            Stay in command and in the loop, free to focus on strategy and results.
             </p>
             <Link
               href="/research"
